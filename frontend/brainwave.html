@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>BrainWave 10K - Neural Interface</title>
+  <style>
+    /* Global body styling */
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #1b1b1b;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    /* Welcome screen styling */
+    #intro-screen {
+      background-color: #333;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    #glow-title {
+      font-size: 2.5rem;
+      color: #00f6ff;
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px #00f6ff, 0 0 30px #00f6ff;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #00f6ff; }
+      to { text-shadow: 0 0 30px #00f6ff, 0 0 60px #00cfff; }
+    }
+
+    #interaction-message {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      color: #c0fefe;
+      font-style: italic;
+    }
+
+    #start-btn {
+      background-color: #00f6ff;
+      color: #1e1e1e;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #start-btn:hover {
+      background-color: #00d6c8;
+      transform: scale(1.05);
+    }
+
+    /* Grade selection styling */
+    .grade-selection {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      background-color: #333;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .grade-selection button {
+      background-color: #00f6ff;
+      color: #1e1e1e;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 200px;
+    }
+
+    .grade-selection button:hover {
+      background-color: #00d6c8;
+      transform: scale(1.05);
+    }
+
+    /* Game Container */
+    .game-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px #00ff00;
+      width: 80%;
+      max-width: 900px;
+      text-align: center;
+    }
+
+    .question-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #00ff00;
+      margin-bottom: 20px;
+    }
+
+    .answer-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .answer-buttons button {
+      padding: 15px;
+      background: linear-gradient(145deg, #005700, #00ff00);
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00ff00;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .answer-buttons button:hover {
+      background: linear-gradient(145deg, #00ff00, #005700);
+      transform: scale(1.05);
+    }
+
+    /* Score & Timer */
+    .score-timer {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 30px;
+    }
+
+    .score, .timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #00ff00;
+    }
+
+    /* Wakanda Modal */
+    .wakanda-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: rgba(0, 0, 0, 0.9);
+      padding: 40px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 25px #00ff00;
+    }
+
+    .wakanda-modal h2 {
+      font-size: 2rem;
+      color: #00ff00;
+    }
+
+    .wakanda-modal p {
+      font-size: 1.2rem;
+      color: #00ff00;
+    }
+
+    .interactive-btn {
+      padding: 15px 30px;
+      background: linear-gradient(145deg, #008800, #00ff00);
+      color: #fff;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #00ff00;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .interactive-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(145deg, #00ff00, #008800);
+    }
+  </style>
+</head>
+<body>
+  <!-- Welcome Screen -->
+  <div id="intro-screen">
+    <h1 id="glow-title">Welcome to BrainWave 10K</h1>
+    <p id="interaction-message">Initializing Neural Interface...</p>
+    <button id="start-btn">Begin</button>
+  </div>
+
+  <!-- Grade Selection -->
+  <div id="grade-selection" class="grade-selection">
+    <h2>Select Your Grade Level</h2>
+    <button id="grade-10-12-btn">Grade 10-12</button>
+    <button id="grade-8-9-btn">Grade 8-9</button>
+    <button id="grade-7-btn">Grade 7</button>
+    <button id="math-geeks-btn">Math Geeks</button>
+  </div>
+
+  <!-- Game Interface -->
+  <div id="game-container" class="game-container">
+    <div id="question-text" class="question-text"></div>
+    <div id="error-message" style="color: #ff0000; display: none; margin: 10px 0;"></div>
+    <div id="answer-buttons" class="answer-buttons"></div>
+    <button id="wakanda-btn" class="interactive-btn" style="margin-top: 20px;">WAKANDA FOREVER</button>
+    <div class="score-timer">
+      <div id="score" class="score">Score: 0</div>
+      <div id="correct" class="correct">Correct: 0</div>
+      <div id="incorrect" class="incorrect">Incorrect: 0</div>
+      <div id="timer" class="timer">Time: 0</div>
+    </div>
+  </div>
+
+  <!-- Wakanda Results Modal -->
+  <div id="wakanda-modal" class="wakanda-modal">
+    <div class="modal-content">
+      <h2>Wakanda Forever!</h2>
+      <p>Your Score: <span id="wakanda-score">0</span></p>
+      <p>Correct Answers: <span id="wakanda-correct">0</span></p>
+      <p>Time Taken: <span id="wakanda-time">0</span>s</p>
+      <button id="close-wakanda" class="interactive-btn">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Typing effect
+    const msg = "Activate your mind. Outsmart the system. Prove you're the future";
+    let index = 0;
+    const interactionText = document.getElementById('interaction-message');
+
+    function typeEffect() {
+      if (index < msg.length) {
+        interactionText.textContent += msg.charAt(index);
+        index++;
+        setTimeout(typeEffect, 50);
+      }
+    }
+
+    setTimeout(() => {
+      interactionText.textContent = '';
+      typeEffect();
+    }, 1500);
+
+    // Handle begin button click
+    document.getElementById('start-btn').addEventListener('click', () => {
+      document.getElementById('intro-screen').style.transition = 'opacity 1s ease';
+      document.getElementById('intro-screen').style.opacity = '0';
+      
+      setTimeout(() => {
+        document.getElementById('intro-screen').style.display = 'none';
+        document.getElementById('grade-selection').style.display = 'flex';
+      }, 1000);
+    });
+
+    // Game state variables
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let correctAnswers = 0;
+    let incorrectAnswers = 0;
+    let timeElapsed = 0;
+    let timerInterval;
+    let currentQuestions = [];
+    let currentLevel = '';
+
+    // API endpoints
+    const API_ENDPOINTS = {
+      'grade-7': 'https://opentdb.com/api.php?amount=50&category=17&difficulty=easy&type=multiple&encode=base64',
+      'grade-8-9': 'https://opentdb.com/api.php?amount=50&category=17&difficulty=medium&type=multiple&encode=base64',
+      'grade-10-12': 'https://opentdb.com/api.php?amount=50&category=17&difficulty=hard&type=multiple&encode=base64',
+      'math-geeks': 'https://api.difficultmathquestions.com/get', // New API for difficult questions
+      'math-fallback1': 'https://api.mathjs.org/v4/?expr=2%2B3*sqrt(4)', // Example math.js API
+      'math-fallback2': 'https://mathqa-api.example.com/questions' // Example alternative
+    };
+
+    // No local questions - only API-based
+    const FALLBACK_MATH_QUESTIONS = [];
+
+    // Helper to format questions consistently
+    function formatMathQuestion(question, correctAnswer) {
+      const incorrectAnswers = [
+        (parseFloat(correctAnswer) + 1).toString(),
+        (parseFloat(correctAnswer) - 1).toString(),
+        (parseFloat(correctAnswer) * 2).toString()
+      ];
+      
+      return {
+        question: question,
+        answers: [
+          correctAnswer.toString(),
+          ...incorrectAnswers
+        ].sort(() => Math.random() - 0.5),
+        correct: 0
+      };
+    }
+
+    // Decode base64 strings from OpenTrivia
+    function decodeBase64(str) {
+      return decodeURIComponent(escape(atob(str)));
+    }
+
+    // Fetch questions from API
+    async function fetchQuestions(level) {
+      try {
+        if (level === 'math-geeks') {
+          // For Math Geeks, we'll fetch one question at a time
+          return null;
+        }
+        
+        const response = await fetch(API_ENDPOINTS[level]);
+        const data = await response.json();
+        
+        return data.results.map(q => ({
+          question: decodeBase64(q.question),
+          answers: [
+            decodeBase64(q.correct_answer),
+            ...q.incorrect_answers.map(a => decodeBase64(a))
+          ].sort(() => Math.random() - 0.5), // Shuffle answers
+          correct: 0 // Correct answer is always first after shuffle
+        }));
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+        return null;
+      }
+    }
+
+    // Math question generator with math.js
+    async function fetchMathQuestion() {
+      // Question templates
+      const questionTemplates = [
+        {
+          template: "What is {a} + {b}?",
+          fn: (a, b) => a + b
+        },
+        {
+          template: "Solve for x: {a}x + {b} = {c}",
+          fn: (a, b, c) => (c - b) / a
+        },
+        {
+          template: "What is the square root of {a}?",
+          fn: (a) => Math.sqrt(a)
+        },
+        {
+          template: "What is {a} × {b}?",
+          fn: (a, b) => a * b
+        }
+      ];
+
+      // Generate random parameters
+      const a = Math.floor(Math.random() * 10) + 1;
+      const b = Math.floor(Math.random() * 10) + 1;
+      const c = a * 2 + b; // Ensure solvable equation
+      
+      // Select random template
+      const template = questionTemplates[
+        Math.floor(Math.random() * questionTemplates.length)
+      ];
+      
+      // Generate question and answer
+      const question = template.template
+        .replace('{a}', a)
+        .replace('{b}', b)
+        .replace('{c}', c);
+      
+      const correctAnswer = template.fn(a, b, c).toString();
+      
+      return formatMathQuestion(question, correctAnswer);
+    }
+
+    // Grade selection handlers
+    document.getElementById('grade-10-12-btn').addEventListener('click', async () => {
+      await startGame('grade-10-12');
+    });
+
+    document.getElementById('grade-8-9-btn').addEventListener('click', async () => {
+      await startGame('grade-8-9');
+    });
+
+    document.getElementById('grade-7-btn').addEventListener('click', async () => {
+      await startGame('grade-7');
+    });
+
+    document.getElementById('math-geeks-btn').addEventListener('click', async () => {
+      await startGame('math-geeks');
+    });
+
+    // Start game function
+    async function startGame(level) {
+      document.getElementById('grade-selection').style.display = 'none';
+      document.getElementById('game-container').style.display = 'flex';
+      
+      // Show loading message
+      document.getElementById('question-text').textContent = 'Loading questions...';
+      document.getElementById('answer-buttons').innerHTML = '';
+      
+      // Start timer
+      timerInterval = setInterval(() => {
+        timeElapsed++;
+        document.getElementById('timer').textContent = `Time: ${timeElapsed}`;
+      }, 1000);
+
+      currentLevel = level;
+      currentQuestionIndex = 0;
+      
+      if (level === 'math-geeks') {
+        // For Math Geeks, we'll fetch questions one at a time
+        await loadQuestion(level);
+      } else {
+        // For other levels, fetch all questions at once
+        currentQuestions = await fetchQuestions(level);
+        if (!currentQuestions || currentQuestions.length === 0) {
+          showError();
+          return;
+        }
+        await loadQuestion(level);
+      }
+    }
+
+    function showError() {
+      const errorDiv = document.getElementById('error-message');
+      errorDiv.textContent = 'Wakanda boys are working behind the scenes to ensure you get the most relevant questions. Please hold on while we optimize your experience';
+      errorDiv.style.display = 'block';
+      
+      const button = document.createElement('button');
+      button.textContent = 'Return to Menu';
+      button.addEventListener('click', resetGame);
+      document.getElementById('answer-buttons').innerHTML = '';
+      document.getElementById('answer-buttons').appendChild(button);
+    }
+
+    // Add click handler for WAKANDA FOREVER button
+    document.getElementById('wakanda-btn').addEventListener('click', endGame);
+
+    // Load question function
+    async function loadQuestion(level) {
+      let currentQuestion;
+      
+      if (level === 'math-geeks') {
+        currentQuestion = await fetchMathQuestion();
+        if (!currentQuestion) {
+          showError();
+          return;
+        }
+      } else {
+        currentQuestion = currentQuestions[currentQuestionIndex];
+      }
+      
+      document.getElementById('question-text').textContent = currentQuestion.question;
+      
+      const answerButtons = document.getElementById('answer-buttons');
+      answerButtons.innerHTML = '';
+      
+      currentQuestion.answers.forEach((answer, index) => {
+        const button = document.createElement('button');
+        button.textContent = answer;
+        button.addEventListener('click', () => selectAnswer(index, level));
+        answerButtons.appendChild(button);
+      });
+    }
+
+    // Select answer function
+    async function selectAnswer(answerIndex, level) {
+      let currentQuestion;
+      
+      if (level === 'math-geeks') {
+        currentQuestion = currentQuestions[currentQuestionIndex] || await fetchMathQuestion();
+      } else {
+        currentQuestion = currentQuestions[currentQuestionIndex];
+      }
+      
+      // Check if answer is correct (correct answer is always index 0 after shuffle)
+      if (answerIndex === 0) {
+        score += 10;
+        correctAnswers++;
+      } else {
+        incorrectAnswers++;
+      }
+      
+      // Update score display
+      document.getElementById('score').textContent = `Score: ${score}`;
+      document.getElementById('correct').textContent = `Correct: ${correctAnswers}`;
+      document.getElementById('incorrect').textContent = `Incorrect: ${incorrectAnswers}`;
+      
+      // Move to next question or end game
+      currentQuestionIndex++;
+      if (level === 'math-geeks' || currentQuestionIndex < currentQuestions.length) {
+        await loadQuestion(level);
+      } else {
+        endGame();
+      }
+    }
+
+    // End game function
+    function endGame() {
+      clearInterval(timerInterval);
+      
+      // Show results modal
+      document.getElementById('wakanda-score').textContent = score;
+      document.getElementById('wakanda-correct').textContent = correctAnswers;
+      document.getElementById('wakanda-time').textContent = timeElapsed;
+      document.getElementById('wakanda-modal').style.display = 'flex';
+      
+      // Close modal handler
+      document.getElementById('close-wakanda').addEventListener('click', () => {
+        document.getElementById('wakanda-modal').style.display = 'none';
+        resetGame();
+      });
+    }
+
+    // Reset game function
+    function resetGame() {
+      currentQuestionIndex = 0;
+      score = 0;
+      correctAnswers = 0;
+      incorrectAnswers = 0;
+      timeElapsed = 0;
+      
+      document.getElementById('game-container').style.display = 'none';
+      document.getElementById('grade-selection').style.display = 'flex';
+    }
+  </script>
+</body>
+</html>

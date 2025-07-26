@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RUDASUMBWA Teacher Dashboard</title>
+  <link rel="stylesheet" href="styles/teacher-dashboard.css">
+  <link rel="stylesheet" href="styles/teacher-dashboard-settings.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="dark-bg">
+  <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Open menu">☰</button>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="sidebar glass" id="sidebar">
+    <div class="sidebar-profile">
+      <img src="assets/images/teacher-profile.png" alt="Profile" class="sidebar-avatar">
+      <div class="sidebar-profile-info">
+        <div class="sidebar-profile-name">Mr. Nkurunziza</div>
+      </div>
+    </div>
+      <nav>
+      <a class="sidebar-link active" data-section="welcome" title="Dashboard"><span class="icon">🏠</span><span class="label">Dashboard</span></a>
+      <a href="teacher quiz.html" class="sidebar-link" title="Create Quiz"><span class="icon">❓</span><span class="label">Create Quiz</span></a>
+      <a class="sidebar-link" data-section="submissions" title="Submissions"><span class="icon">📥</span><span class="label">Submissions</span></a>
+      <a href="brainwave.html" class="sidebar-link" title="Brainwaves"><span class="icon">🧠</span><span class="label">Brainwaves</span></a>
+      <a href="notes.html" class="sidebar-link" title="Notes"><span class="icon">📝</span><span class="label">Notes</span></a>
+      <a class="sidebar-link" data-section="announcements" title="Announcements"><span class="icon">🔔</span><span class="label">Announcements</span></a>
+<a href="club.html" class="sidebar-link" title="Clubs"><span class="icon">🧑‍🏫</span><span class="label">Clubs</span></a>
+      <a class="sidebar-link" data-section="ai" title="Ask Peter (AI)"><span class="icon">🤖</span><span class="label">Ask Peter</span></a>
+      <a class="sidebar-link" data-section="leaderboard" title="Leaderboard"><span class="icon">👑</span><span class="label">Leaderboard</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a class="sidebar-link" data-section="settings" title="Settings"><span class="icon">⚙️</span><span class="label">Settings</span></a>
+      <a class="sidebar-link logout-link" href="#" title="Logout"><span class="icon">🚪</span><span class="label">Logout</span></a>
+    </div>
+  </aside>
+  <header class="teacher-header glass">
+    <div class="header-left"><script src="js/admin-club-admin.js"></script><script src="js/admin-club-admin.js"></script><script src="js/admin-club-admin.js"></script><script src="js/admin-club-admin.js"></script>
+      <img src="images/logo.PNG" alt="School Logo" class="header-logo">
+      <div class="header-title-group">
+        <span class="header-title">RUDASUMBWA</span>
+        <span class="header-portal">Teacher Portal</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <span id="current-time" class="header-time"></span>
+    </div>
+  </header>
+  <main class="main-content">
+    <!-- Welcome Section -->
+    <section id="welcome" class="dashboard-section">
+      <div class="welcome-hero glass" style="padding-bottom:2.5rem;">
+        <div class="welcome-info" style="margin-bottom:1.5rem;">
+          <h1 style="font-size:2rem;font-weight:700;">🌟 Welcome back, Mr. Nkurunziza!</h1>
+          <div class="subject-badges" style="margin:0.7rem 0 1.2rem 0;">
+            <span class="badge">Mathematics</span>
+            <span class="badge">S4A</span>
+          </div>
+        </div>
+        <div class="dashboard-summary-cards" style="display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:flex-start;">
+          <div class="stat-card glass" style="min-width:160px;align-items:center;text-align:center;">
+            <span style="font-size:2rem;">📚</span>
+            <div style="margin-top:0.5rem;"><b style="font-size:1.5rem;">3</b><br><span style="color:#a1a1aa;">Subjects</span></div>
+          </div>
+          <div class="stat-card glass" style="min-width:160px;align-items:center;text-align:center;">
+            <span style="font-size:2rem;">📝</span>
+            <div style="margin-top:0.5rem;"><b style="font-size:1.5rem;">8</b><br><span style="color:#a1a1aa;">Notes Created</span></div>
+          </div>
+          <div class="stat-card glass" style="min-width:160px;align-items:center;text-align:center;">
+            <span style="font-size:2rem;">❓</span>
+            <div style="margin-top:0.5rem;"><b style="font-size:1.5rem;">12</b><br><span style="color:#a1a1aa;">Quizzes</span></div>
+          </div>
+          <div class="stat-card glass" style="min-width:160px;align-items:center;text-align:center;">
+            <span style="font-size:2rem;">📈</span>
+            <div style="margin-top:0.5rem;"><b style="font-size:1.5rem;">85%</b><br><span style="color:#a1a1aa;">Performance Avg</span></div>
+          </div>
+          <div class="stat-card glass" style="min-width:160px;align-items:center;text-align:center;">
+            <span style="font-size:2rem;">📥</span>
+            <div style="margin-top:0.5rem;"><b style="font-size:1.5rem;">5</b><br><span style="color:#a1a1aa;">Submissions</span></div>
+          </div>
+        </div>
+        <div class="motivational-quote" style="margin-top:2rem;font-size:1.1rem;color:#a78bfa;">“Empowering Young Minds.”</div>
+        <!-- Leaderboard and Ask Peter Row -->
+        <div class="dashboard-extras" style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:2.5rem;align-items:flex-start;">
+          <!-- Leaderboard Card -->
+          <div class="glass" style="flex:1 1 320px;min-width:300px;max-width:400px;padding:1.2rem 1.2rem 1.5rem 1.2rem;">
+            <h3 style="margin:0 0 1rem 0;font-size:1.2rem;font-weight:700;color:#facc15;display:flex;align-items:center;gap:0.5rem;">👑 Leaderboard</h3>
+            <div class="leaderboard-list">
+              <div class="leaderboard-row gold" style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;font-weight:600;color:#ffd700;">
+                <span>���� Jean Bosco</span><span>Mathematics</span><span>1500 XP</span>
+              </div>
+              <div class="leaderboard-row silver" style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;font-weight:600;color:#c0c0c0;">
+                <span>🥈 Marie Claire</span><span>Mathematics</span><span>1400 XP</span>
+              </div>
+              <div class="leaderboard-row bronze" style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;font-weight:600;color:#cd7f32;">
+                <span>🥉 You</span><span>Mathematics</span><span>1300 XP</span>
+              </div>
+            </div>
+          </div>
+          <!-- Ask Peter Card -->
+          <div class="glass" style="flex:1 1 320px;min-width:300px;max-width:400px;padding:1.2rem 1.2rem 1.5rem 1.2rem;">
+            <h3 style="margin:0 0 1rem 0;font-size:1.2rem;font-weight:700;color:#6366f1;display:flex;align-items:center;gap:0.5rem;">🤖 Ask Peter (AI)</h3>
+            <div class="ai-chat" style="background:rgba(255,255,255,0.03);border-radius:1rem;padding:0.7rem;">
+              <div class="ai-messages" style="min-height:40px;font-size:0.98rem;color:#a1a1aa;margin-bottom:0.7rem;">Hello! How can I help you today?</div>
+              <div class="ai-input-row" style="display:flex;gap:0.5rem;">
+                <input type="text" class="ai-input" placeholder="Ask Peter anything..." style="flex:1;padding:0.5rem 0.8rem;border-radius:0.7rem;border:none;background:rgba(255,255,255,0.08);color:#fff;">
+                <button class="ai-send-btn" style="background:linear-gradient(90deg,#6366f1,#a78bfa);color:#fff;padding:0.5rem 1.1rem;border-radius:0.7rem;border:none;font-weight:600;">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Daily Gospel Section -->
+    <section id="daily-gospel" class="dashboard-section">
+      <div class="section-title">✝️ Daily Gospel</div>
+      <div class="gospel-content glass">
+        <div id="gospel-loading">Loading today's Gospel...</div>
+        <div id="gospel-text" style="display:none;"></div>
+        <div id="gospel-reference" style="display:none;"></div>
+        <a id="gospel-link" href="https://bible.usccb.org/daily-bible-reading" target="_blank" rel="noopener" class="gospel-link-btn" style="display:inline-block;margin-top:1rem;padding:0.5rem 1.2rem;background:#3b82f6;color:#fff;border-radius:6px;text-decoration:none;font-weight:600;box-shadow:0 2px 8px #0001;transition:background 0.2s;">Read Full Gospel at USCCB</a>
+      </div>
+    </section>
+    <!-- Quizzes Section -->
+    <section id="create-quiz" class="dashboard-section hidden">
+      <div class="section-title">❓ Create Quiz</div>
+      <button class="action-btn" onclick="window.location.href='teacher quiz.html'">➕ New Quiz</button>
+      <div class="quiz-list glass" style="margin-top:1.5rem;">
+        <h3 style="margin-bottom:1rem;font-size:1.1rem;color:#a1a1aa;font-weight:600;">Your Quizzes</h3>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="color:#a1a1aa;text-align:left;font-size:0.98rem;">
+              <th style="padding:0.5rem 0.7rem;">Quiz Title</th>
+              <th style="padding:0.5rem 0.7rem;">Class</th>
+              <th style="padding:0.5rem 0.7rem;">Type</th>
+              <th style="padding:0.5rem 0.7rem;">Submissions</th>
+              <th style="padding:0.5rem 0.7rem;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-top:1px solid #222;">
+              <td style="padding:0.5rem 0.7rem;">Algebra Basics</td>
+              <td style="padding:0.5rem 0.7rem;">S4A</td>
+              <td style="padding:0.5rem 0.7rem;">MCQ</td>
+              <td style="padding:0.5rem 0.7rem;">24</td>
+              <td style="padding:0.5rem 0.7rem;"><button class="edit-btn">Edit</button> <button class="delete-btn">Delete</button></td>
+            </tr>
+            <tr>
+              <td style="padding:0.5rem 0.7rem;">Geometry Quiz</td>
+              <td style="padding:0.5rem 0.7rem;">S3B</td>
+              <td style="padding:0.5rem 0.7rem;">Open-ended</td>
+              <td style="padding:0.5rem 0.7rem;">18</td>
+              <td style="padding:0.5rem 0.7rem;"><button class="edit-btn">Edit</button> <button class="delete-btn">Delete</button></td>
+            </tr>
+            <!-- More quizzes... -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- Submissions Section -->
+    <section id="submissions" class="dashboard-section hidden">
+      <div class="section-title">📥 Student Submissions</div>
+      <div class="submission-list glass">
+        <div class="submission-row">
+          <span>Jean Bosco</span>
+          <span>Algebra Basics</span>
+          <span>2024-06-01 10:30</span>
+          <button class="grade-btn">Grade Now</button>
+        </div>
+        <!-- More submissions... -->
+      </div>
+    </section>
+    <!-- Notes Section -->
+    <section id="notes" class="dashboard-section hidden">
+      <div class="section-title">📝 Create Notes</div>
+      <form class="notes-form glass" style="margin-bottom:2rem;">
+        <input type="text" name="teacher" placeholder="Teacher Name" required>
+        <select name="subject" required><option value="">Select Subject</option><option>Mathematics</option><option>Physics</option></select>
+        <select name="class" required><option value="">Select Class</option><option>S4A</option><option>S3B</option></select>
+        <input type="text" name="title" placeholder="Note Title" required>
+        <textarea name="description" placeholder="Description"></textarea>
+        <select name="tag" required>
+          <option value="">Select Tag</option>
+          <option>#Theory</option>
+          <option>#Practical</option>
+          <option>#Exercises</option>
+          <option>#SolvedExamples</option>
+          <option>#RevisionNotes</option>
+          <option>#ImportantFacts</option>
+          <option>#Assignment</option>
+        </select>
+        <input type="file" name="attachment" accept=".pdf,.doc,.docx,.mp4,.avi,.mov">
+        <input type="date" name="date" required>
+        <button type="submit" class="glass">Post Note</button>
+      </form>
+      <div class="note-preview glass" style="margin-bottom:2rem;">
+        <!-- Glassmorphism Note Preview -->
+        <h4 style="color:#a1a1aa;">Note Preview</h4>
+        <div style="color:#fff;">(Preview of note content will appear here.)</div>
+      </div>
+      <div class="note-analytics glass">
+        <h3 style="color:#3b82f6;font-size:1.1rem;margin-bottom:1rem;">📊 Note Analytics</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:1.5rem;">
+          <div style="min-width:220px;">
+            <div>👁️ Views: 120 | Today: 12 | Last 7 days: 38</div>
+            <div style="margin-top:0.5rem;">⬇️ Downloads: 48 (32 PDF, 16 DOCX)</div>
+            <div style="margin-top:0.5rem;">⏱️ Avg Reading Time: 3m 12s</div>
+            <div style="margin-top:0.5rem;">👍 18 | ❤️ 6 | ❓ 3 | 🧠 9</div>
+            <div style="margin-top:0.5rem;">🗨️ Comments: 7 <span style="color:#22c55e;font-size:0.95em;">(2 unread)</span></div>
+            <div style="margin-top:0.5rem;">⭐ 4.5 / 5 (Rated by 23 students)</div>
+            <div style="margin-top:0.5rem;">📅 Posted: 2024-05-20 | Last updated: 2024-05-28</div>
+          </div>
+          <div style="min-width:220px;">
+            <h4 style="color:#a1a1aa;font-size:1em;">Class-wise Access</h4>
+            <table style="width:100%;font-size:0.97em;color:#fff;background:rgba(255,255,255,0.03);border-radius:0.7rem;">
+              <tr><th>Class</th><th>Views</th><th>Downloads</th><th>Avg Time</th></tr>
+              <tr><td>Senior 3A</td><td>24</td><td>18</td><td>2m 45s</td></tr>
+              <tr><td>Senior 3B</td><td>16</td><td>10</td><td>3m 10s</td></tr>
+            </table>
+          </div>
+          <div style="min-width:220px;">
+            <h4 style="color:#a1a1aa;font-size:1em;">Quiz Linked to Note</h4>
+            <div>Attempts: 19 | Avg Score: 78%</div>
+            <div>Performance by Q: <span style="color:#a1a1aa;">(Bar chart placeholder)</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Brainwaves Section -->
+    <section id="brainwaves" class="dashboard-section hidden">
+      <div class="section-title">🧠 Brainwave Uploads</div>
+      <div class="brainwave-critical-message" style="margin-bottom:1rem;color:#facc15;font-weight:bold;">This is a game for critical thinking!</div>
+      <button class="action-btn">🧾 Upload Brainwave</button>
+      <div class="brainwave-list glass">
+        <div class="brainwave-card">
+          <span>📄</span>
+          <span>Math Notes - Algebra.pdf</span>
+          <button class="view-btn">View</button>
+          <button class="delete-btn">Delete</button>
+        </div>
+        <!-- More brainwaves... -->
+      </div>
+    </section>
+    <!-- Announcements Section -->
+    <section id="announcements" class="dashboard-section hidden">
+      <div class="section-title">🔔 Announcements</div>
+      <div class="announcement-tabs" style="display:flex;gap:1.5rem;margin-bottom:1.2rem;">
+        <button class="tab-btn active" data-tab="head" style="padding:0.5rem 1.2rem;border-radius:0.7rem;border:none;font-weight:600;background:#23263a;color:#facc15;">From Head of Studies</button>
+        <button class="tab-btn" data-tab="my" style="padding:0.5rem 1.2rem;border-radius:0.7rem;border:none;font-weight:600;background:#23263a;color:#a1a1aa;">My Announcements</button>
+        <button class="tab-btn" data-tab="new" style="padding:0.5rem 1.2rem;border-radius:0.7rem;border:none;font-weight:600;background:#23263a;color:#22c55e;">+ New Announcement</button>
+      </div>
+      <div class="announcement-content glass" id="announcement-head">
+        <h3 style="color:#facc15;font-size:1.1rem;margin-bottom:0.7rem;">From Head of Studies</h3>
+        <div class="announcement-card">
+          <span>Exam on Friday. Prepare well!</span>
+          <span class="timestamp">2024-06-01</span>
+        </div>
+        <div class="announcement-card">
+          <span>Staff meeting on Monday at 2pm in the main hall.</span>
+          <span class="timestamp">2024-05-29</span>
+        </div>
+        <!-- More head announcements... -->
+      </div>
+      <div class="announcement-content glass hidden" id="announcement-my">
+        <h3 style="color:#a1a1aa;font-size:1.1rem;margin-bottom:0.7rem;">My Announcements</h3>
+        <div class="announcement-card">
+          <span>Math club will meet after class on Thursday.</span>
+          <span class="timestamp">2024-05-30</span>
+        </div>
+        <!-- More teacher announcements... -->
+      </div>
+      <div class="announcement-content glass hidden" id="announcement-new">
+        <h3 style="color:#22c55e;font-size:1.1rem;margin-bottom:0.7rem;">Create New Announcement</h3>
+        <form class="announcement-form">
+          <input type="text" name="title" placeholder="Announcement Title" required style="margin-bottom:0.7rem;">
+          <textarea name="body" placeholder="Write your announcement here..." required style="margin-bottom:0.7rem;"></textarea>
+          <select name="audience" required style="margin-bottom:0.7rem;">
+            <option value="">Select Audience</option>
+            <option value="class">My Class</option>
+            <option value="all">Whole School</option>
+          </select>
+          <button type="submit" class="action-btn" style="background:linear-gradient(90deg,#22c55e,#3b82f6);color:#fff;">Post Announcement</button>
+        </form>
+      </div>
+      <script>
+        // Simple tab switching for announcements
+        document.addEventListener('DOMContentLoaded', function() {
+          const tabs = document.querySelectorAll('.tab-btn');
+          const contents = {
+            head: document.getElementById('announcement-head'),
+            my: document.getElementById('announcement-my'),
+            new: document.getElementById('announcement-new')
+          };
+          tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+              tabs.forEach(t => t.classList.remove('active'));
+              tab.classList.add('active');
+              Object.values(contents).forEach(c => c.classList.add('hidden'));
+              contents[tab.dataset.tab].classList.remove('hidden');
+            });
+          });
+        });
+      </script>
+    </section>
+    <!-- Schedule Section -->
+    <section id="schedule" class="dashboard-section hidden">
+      <div class="section-title">📆 Schedule & Timetable</div>
+      <div class="schedule-list glass">
+        <div class="schedule-row">
+          <span>Monday</span>
+          <span>8:00 - 10:00</span>
+          <span>Mathematics S4A</span>
+        </div>
+        <!-- More schedule rows... -->
+      </div>
+    </section>
+    <!-- Clubs Section -->
+    <section id="clubs" class="dashboard-section hidden">
+      <div class="section-title">🧑‍🏫 Clubs & Activities</div>
+      <div class="clubs-carousel-container">
+        <div class="clubs-carousel" id="clubs-carousel">
+          <!-- Example Club Card -->
+                    <div class="club-card-apple" data-joined="true" data-club="music">
+            <img src="assets/images/music-club.jpg" alt="Music Club" class="club-img">
+            <div class="club-info">
+              <div class="club-header"><span class="club-emoji">🎵</span> <span class="club-name">Music Club</span></div>
+              <div class="club-motto">Feel the rhythm, live the beat.</div>
+              <div class="club-desc">Band rehearsals, music production, and live performances. All talents welcome!</div>
+              <div class="club-meta">18 members • 2 events</div>
+              <div class="club-actions">
+                <span class="joined-badge">Joined</span>
+                <button class="view-btn">View</button>
+              </div>
+            </div>
+          </div>
+          <!-- Add more club cards as needed -->
+        </div>
+      </div>
+      <!-- Club Modal Removed -->
+    </section>
+    <!-- AI Assistant Section -->
+    <section id="ai" class="dashboard-section hidden">
+      <div class="section-title">🤖 Ask Peter (AI Assistant)</div>
+      <div class="ai-chat glass">
+        <div class="ai-messages">
+          <div class="ai-message ai">Hello! How can I help you today?</div>
+        </div>
+        <div class="ai-input-row">
+          <input type="text" class="ai-input" placeholder="Ask Peter anything...">
+          <button class="ai-send-btn">Send</button>
+          <button class="ai-mic-btn">🎤</button>
+        </div>
+      </div>
+    </section>
+    <!-- Leaderboard Section -->
+    <section id="leaderboard" class="dashboard-section hidden">
+      <div class="section-title">👑 Leaderboard</div>
+      <div class="leaderboard-list glass">
+        <div class="leaderboard-row gold">
+          <span>🥇 Jean Bosco</span>
+          <span>Mathematics</span>
+          <span>1500 XP</span>
+        </div>
+        <div class="leaderboard-row silver">
+          <span>🥈 Marie Claire</span>
+          <span>Mathematics</span>
+          <span>1400 XP</span>
+        </div>
+        <div class="leaderboard-row bronze">
+          <span>🥉 You</span>
+          <span>Mathematics</span>
+          <span>1300 XP</span>
+        </div>
+      </div>
+    </section>
+    <!-- Settings Section -->
+    <section id="settings" class="dashboard-section hidden">
+      <div class="settings-content glass" style="max-width: 700px; margin: 0 auto; padding: 1.5rem;">
+        <h2 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 1rem;">Teacher Dashboard Settings Features (RUDASUMBWA)</h2>
+        <div class="tabs" style="display: flex; border-bottom: 2px solid var(--glass-border); margin-bottom: 1rem;">
+          <button class="tab-btn active" data-tab="profile-settings" style="flex: 1; padding: 0.8rem 1rem; background: none; border: none; border-bottom: 3px solid var(--primary); color: var(--primary); font-weight: 600; cursor: pointer;">🧑‍🏫 Profile Settings</button>
+          <button class="tab-btn" data-tab="password-security" style="flex: 1; padding: 0.8rem 1rem; background: none; border: none; border-bottom: 3px solid transparent; color: var(--text-main); font-weight: 600; cursor: pointer;">🔒 Password & Security</button>
+        </div>
+        <div class="tab-content" id="profile-settings">
+          <form id="profile-settings-form" style="display: flex; flex-direction: column; gap: 1rem;">
+            <label>
+              Full Name
+              <input type="text" name="fullName" placeholder="Enter your full name" required>
+            </label>
+            <label>
+              Profile Picture Upload
+              <input type="file" name="profilePicture" accept="image/*">
+            </label>
+            <label>
+              Subject(s) Taught
+              <input type="text" name="subjectsTaught" placeholder="e.g., Mathematics, Physics" required>
+            </label>
+            <label>
+              Assigned Classes
+              <input type="text" name="assignedClasses" placeholder="e.g., Senior 4A, 5B" required>
+            </label>
+            <label>
+              Phone Number
+              <input type="tel" name="phoneNumber" placeholder="Enter your phone number" required>
+            </label>
+            <label>
+              Email Address
+              <input type="email" name="emailAddress" placeholder="Enter your email address" required>
+            </label>
+            <button type="submit" style="align-self: flex-start; padding: 0.6rem 1.2rem;">Update</button>
+            <p style="font-size: 0.9rem; color: var(--success); margin-top: 0.5rem;">✅ Example Action: "Change your email or profile photo"</p>
+          </form>
+        </div>
+        <div class="tab-content hidden" id="password-security">
+          <form id="password-security-form" style="display: flex; flex-direction: column; gap: 1rem;">
+            <label>
+              Current Password
+              <input type="password" name="currentPassword" placeholder="Enter current password" required>
+            </label>
+            <label>
+              New Password
+              <input type="password" id="new-password" name="newPassword" placeholder="Enter new password" required>
+              <button type="button" id="toggle-password" style="margin-left: 0.5rem; padding: 0.2rem 0.5rem; font-size: 0.9rem; cursor: pointer;">Show</button>
+            </label>
+            <label>
+              Confirm New Password
+              <input type="password" id="confirm-password" name="confirmPassword" placeholder="Confirm new password" required>
+            </label>
+            <div id="password-strength" style="height: 8px; background: var(--glass-border); border-radius: 4px; overflow: hidden;">
+              <div id="password-strength-bar" style="height: 100%; width: 0%; background: var(--primary); transition: width 0.3s;"></div>
+            </div>
+            <button type="submit" style="align-self: flex-start; padding: 0.6rem 1.2rem;">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <!-- Logout (handled by sidebar link) -->
+  </main>
+  <footer class="footer glass">Empowering Young Minds — Petit Séminaire Saint Léon Kabgayi | RUDASUMBWA</footer>
+
+  <!-- Floating Ask Peter AI Button and Chat Drawer -->
+  <button id="ai-float-btn" class="fixed bottom-8 right-8 z-50 bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-full p-5 shadow-2xl hover:scale-110 transition-transform flex items-center justify-center focus:outline-none">
+      <span class="material-icons text-3xl animate-pulse">smart_toy</span>
+      <span id="ai-float-expand" class="material-icons text-xl ml-1">expand_less</span>
+  </button>
+  <div id="ai-chat-drawer" class="hidden fixed bottom-24 right-8 w-80 bg-white rounded-2xl shadow-2xl border border-blue-200 z-50 flex flex-col">
+      <div class="flex items-center justify-between p-4 border-b border-blue-100 bg-blue-50 rounded-t-2xl">
+          <span class="font-bold text-blue-700 flex items-center"><span class="material-icons mr-2">smart_toy</span>Ask Peter (AI)</span>
+          <button id="ai-chat-close" class="text-blue-700 text-2xl focus:outline-none"><span class="material-icons">close</span></button>
+      </div>
+      <div id="ai-chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50" style="min-height: 180px;"></div>
+      <div class="p-4 border-t border-blue-100 bg-blue-50 rounded-b-2xl">
+          <input id="ai-chat-input" type="text" class="w-full p-2 rounded bg-white text-gray-900 border border-gray-300 mb-2" placeholder="Ask a question...">
+          <button id="ai-chat-send" class="w-full bg-blue-600 text-white px-4 py-2 rounded-xl shadow hover:bg-blue-700 transition-all font-semibold">Send</button>
+      </div>
+  </div>
+  <script>
+    // Sidebar navigation logic for dashboard sections
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebarLinks = document.querySelectorAll('.sidebar-link');
+      const sections = document.querySelectorAll('.dashboard-section');
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          // Only handle links with data-section (internal dashboard sections)
+          const sectionId = link.getAttribute('data-section');
+          console.log('Sidebar link clicked:', sectionId);
+          if (sectionId) {
+            e.preventDefault();
+            // Remove active from all links
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            // Hide all sections
+            sections.forEach(sec => sec.classList.add('hidden'));
+            // Show the selected section
+            const section = document.getElementById(sectionId);
+            if (section) section.classList.remove('hidden');
+          }
+          // If no data-section, let the browser follow the href (external page)
+        });
+      });
+    });
+  // Daily Gospel fetch logic
+  document.addEventListener('DOMContentLoaded', function() {
+    const gospelLoading = document.getElementById('gospel-loading');
+    const gospelText = document.getElementById('gospel-text');
+    const gospelReference = document.getElementById('gospel-reference');
+    // Example API: https://api.dailygospel.org/ (if not available, use static fallback)
+    fetch('https://api.gospelapi.org/v1/reading/daily?language=en')
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.reading && data.reference) {
+          gospelText.textContent = data.reading;
+          gospelReference.textContent = data.reference;
+          gospelText.style.display = 'block';
+          gospelReference.style.display = 'block';
+          gospelLoading.style.display = 'none';
+        } else {
+          throw new Error('No data');
+        }
+      })
+      .catch(() => {
+        gospelLoading.textContent = "Unable to load today's Gospel. Please try again later.";
+      });
+  });
+  // Floating AI button and chat drawer logic with Gemini API integration and backend proxy
+  document.addEventListener('DOMContentLoaded', function() {
+      const aiBtn = document.getElementById('ai-float-btn');
+      const aiDrawer = document.getElementById('ai-chat-drawer');
+      const aiClose = document.getElementById('ai-chat-close');
+      const aiInput = document.getElementById('ai-chat-input');
+      const aiSend = document.getElementById('ai-chat-send');
+      const aiMessages = document.getElementById('ai-chat-messages');
+      const expandIcon = document.getElementById('ai-float-expand');
+
+      if (aiBtn && aiDrawer && aiClose) {
+          aiBtn.addEventListener('click', () => {
+              aiDrawer.classList.remove('hidden');
+          });
+          aiClose.addEventListener('click', () => {
+              aiDrawer.classList.add('hidden');
+          });
+      }
+      if (expandIcon) {
+          expandIcon.addEventListener('click', () => {
+              aiDrawer.classList.remove('hidden');
+          });
+      }
+      if (aiSend && aiInput && aiMessages) {
+          aiSend.addEventListener('click', async () => {
+              const question = aiInput.value.trim();
+              if (!question) return;
+              // Show user message
+              const userMsg = document.createElement('div');
+              userMsg.className = 'mb-2 text-right';
+              userMsg.innerHTML = `<span class='bg-blue-100 text-blue-800 px-2 py-1 rounded'>${question}</span>`;
+              aiMessages.appendChild(userMsg);
+              aiInput.value = '';
+              aiMessages.scrollTop = aiMessages.scrollHeight;
+              // Show loading
+              const loadingMsg = document.createElement('div');
+              loadingMsg.className = 'mb-2 text-left';
+              loadingMsg.innerHTML = `<span class='bg-gray-200 text-gray-600 px-2 py-1 rounded animate-pulse'>Thinking...</span>`;
+              aiMessages.appendChild(loadingMsg);
+              aiMessages.scrollTop = aiMessages.scrollHeight;
+              // Call backend Gemini API proxy
+              let answer = '';
+              try {
+                  const response = await fetch('/api/ask-peter', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ message: question })
+                  });
+                  const data = await response.json();
+                  if (data && data.text) {
+                      answer = data.text;
+                  } else {
+                      answer = 'Sorry, I could not get an answer from Gemini AI.';
+                  }
+              } catch (e) {
+                  answer = 'AI is currently unavailable. (This may be due to server or network issues.)';
+              }
+              loadingMsg.remove();
+              const aiMsg = document.createElement('div');
+              aiMsg.className = 'mb-2 text-left';
+              aiMsg.innerHTML = `<span class='bg-purple-100 text-purple-800 px-2 py-1 rounded'>${answer}</span>`;
+              aiMessages.appendChild(aiMsg);
+              aiMessages.scrollTop = aiMessages.scrollHeight;
+          });
+      }
+  });
+  </script>
+  <script>
+    function updateTime() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const timeString = `${h}:${m}:${s}`;
+      const timeElement = document.getElementById('current-time');
+      if (timeElement) {
+        timeElement.textContent = timeString;
+      }
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+  </script>
+  </body>
+</html>

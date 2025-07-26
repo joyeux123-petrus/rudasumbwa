@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Petit Séminaire Saint Léon Kabgayi</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dark">
+  <div class="signup-container">
+    <img src="images/logo.PNG" alt="Petit Séminaire Saint Léon Kabgayi Logo" style="display:block; margin: 0 auto 20px auto; width: 50px; pointer-events: none; user-select: none;">
+    <h2>Sign Up</h2>
+    <form id="signup-form">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" name="role" required onchange="toggleRoleFields()">
+          <option value="">Select Role</option>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+        </select>
+      </div>
+      <div id="student-fields" style="display:none;">
+        <div class="form-group">
+          <label for="class">Class</label>
+          <select id="class" name="class">
+            <option value="">Select Class</option>
+            <option value="S1">Senior 1 (S1)</option>
+            <option value="S2">Senior 2 (S2)</option>
+            <option value="S3">Senior 3 (S3)</option>
+            <option value="S4">Senior 4 (S4)</option>
+            <option value="S5">Senior 5 (S5)</option>
+            <option value="S6">Senior 6 (S6)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="district">District</label>
+          <input type="text" id="district" name="district" placeholder="e.g. Muhanga">
+        </div>
+        <div class="form-group">
+          <label for="parish">Parish</label>
+          <input type="text" id="parish" name="parish" placeholder="Your parish name">
+        </div>
+      </div>
+      <div id="teacher-fields" style="display:none;">
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="e.g. Mathematics">
+        </div>
+        <div class="form-group">
+          <label for="district-teacher">District</label>
+          <input type="text" id="district-teacher" name="district-teacher" placeholder="e.g. Muhanga">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" name="password" required>
+          <button type="button" class="password-toggle" onclick="togglePassword('password')"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="confirm-password">Confirm Password</label>
+        <div class="input-wrapper">
+          <input type="password" id="confirm-password" name="confirm-password" required>
+          <button type="button" class="password-toggle" onclick="togglePassword('confirm-password')"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" id="signup-btn">Sign Up</button>
+      <div style="text-align:center; margin-top:10px;">
+        <a class="btn-signin" href="login.html"><i class="fas fa-sign-in-alt"></i> Already have an account? Sign In</a>
+      </div>
+    </form>
+    <div id="signup-message" class="signup-message" role="alert" aria-live="polite"></div>
+  </div>
+  <script>
+    function toggleRoleFields() {
+      var role = document.getElementById('role').value;
+      document.getElementById('student-fields').style.display = (role === 'student') ? 'block' : 'none';
+      document.getElementById('teacher-fields').style.display = (role === 'teacher') ? 'block' : 'none';
+    }
+    function togglePassword(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+    document.getElementById('signup-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const role = document.getElementById('role').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      let className = '', district = '', parish = '', subject = '', districtTeacher = '';
+      const messageDiv = document.getElementById('signup-message');
+      // Validate required fields
+      if (!name || !email || !role) {
+        messageDiv.innerHTML = '<span style="color:red">Please fill in all required fields.</span>';
+        return;
+      }
+      if (role === 'student') {
+        className = document.getElementById('class').value;
+        district = document.getElementById('district').value.trim();
+        parish = document.getElementById('parish').value.trim();
+        if (!className || !district || !parish) {
+          messageDiv.innerHTML = '<span style="color:red">Please fill in all student details.</span>';
+          return;
+        }
+      } else if (role === 'teacher') {
+        subject = document.getElementById('subject').value.trim();
+        districtTeacher = document.getElementById('district-teacher').value.trim();
+        if (!subject || !districtTeacher) {
+          messageDiv.innerHTML = '<span style="color:red">Please fill in all teacher details.</span>';
+          return;
+        }
+      }
+      if (password.length < 6) {
+        messageDiv.innerHTML = '<span style="color:red">Password must be at least 6 characters.</span>';
+        return;
+      }
+      if (password !== confirmPassword) {
+        messageDiv.innerHTML = '<span style="color:red">Passwords do not match.</span>';
+        return;
+      }
+      // Disable button while processing
+      const signupBtn = document.getElementById('signup-btn');
+      signupBtn.disabled = true;
+      signupBtn.textContent = 'Processing...';
+      messageDiv.innerHTML = '';
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: name,
+            email,
+            password,
+            className: className || '',
+            parish: parish || '',
+            district: (role === 'student' ? district : districtTeacher) || '',
+            role
+          })
+        });
+          if(response.ok) {
+          messageDiv.innerHTML = '<span style="color:green">It will be reviewed by director of studies to confirm that you are student or teacher of Petit Seinire Sant Leon Kbgayi.</span>';
+          document.getElementById('signup-form').reset();
+          toggleRoleFields();
+        } else if (response.status === 409) {
+          messageDiv.innerHTML = '<span style="color:red"><b>You already signed up.</b><br>Please wait for approval from the Director of Studies.</span>';
+        } else {
+          messageDiv.innerHTML = '<span style="color:red">Failed to send sign up request. Please try again later.</span>';
+        }
+      } catch (err) {
+        messageDiv.innerHTML = '<span style="color:red">Error sending request. Please try again later.</span>';
+      }
+      signupBtn.disabled = false;
+      signupBtn.textContent = 'Sign Up';
+    });
+    // Initialize role fields on page load
+    window.onload = toggleRoleFields;
+  </script>
+  <style>
+    .signup-container { max-width: 400px; margin: 60px auto; background: rgba(30,30,40,0.95); padding: 32px 28px; border-radius: 18px; box-shadow: 0 8px 32px #0008; }
+    .signup-container h2 { text-align: center; margin-bottom: 24px; color: #00f7ff; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; margin-bottom: 6px; color: #fff; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; }
+    .input-wrapper { position: relative; }
+    .password-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #00f7ff; cursor: pointer; }
+    .btn.btn-primary { width: 100%; padding: 12px; font-size: 1.1rem; margin-top: 10px; }
+    .signup-message { margin-top: 18px; text-align: center; font-size: 1.05rem; }
+  </style>
+</body>
+</html>

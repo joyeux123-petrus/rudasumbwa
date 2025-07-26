@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Grading</title>
+  <link rel="stylesheet" href="teacher-style.css">
+</head>
+<body>
+  <section id="teacher-grading-section" class="container">
+    <h2>Quizzes Needing Grading</h2>
+    <div id="quizzes-list">
+      <!-- Quizzes will be listed here -->
+    </div>
+    
+    <div id="grading-interface" style="display: none;">
+      <h3 id="quiz-title"></h3>
+      <div id="questions-container">
+        <!-- Questions and student answers will be displayed here -->
+      </div>
+      <button id="submit-grading" class="btn-primary">Submit Grades</button>
+    </div>
+  </section>
+
+  <template id="grading-template">
+    <div class="question">
+      <h4 class="question-text"></h4>
+      <p class="question-marks">Max Marks: <span></span></p>
+      <div class="student-answer">
+        <p>Student Answer:</p>
+        <div class="answer-text"></div>
+      </div>
+      <div class="grading-controls">
+        <label>Marks Awarded: <input type="number" class="marks-awarded" min="0"></label>
+        <label>Feedback: <textarea class="teacher-feedback"></textarea></label>
+      </div>
+    </div>
+  </template>
+
+  <script src="teacher-grading.js"></script>
+</body>
+</html>
