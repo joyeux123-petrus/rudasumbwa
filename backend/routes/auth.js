@@ -91,6 +91,7 @@ router.get('/pending-users', async (req, res) => {
   }
 });
 
+const { sendEmail } = require('../utils/email');
 const fetch = require('node-fetch'); // Add this at the top if not already present
 
 router.post('/approve-user', async (req, res) => {
@@ -103,25 +104,16 @@ router.post('/approve-user', async (req, res) => {
     user.isApproved = true;
     await user.save();
 
-    // Send approval email via Resend
-    const resendApiKey = 're_8acReyBJ_CG2or52t9tkfeKrghQcxC3kn';
-    const emailResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: 'Petit Seminaire Saint Leon Kabgayi <joyeuxpierreishimwe@gmail.com>',
-        to: email,
-        subject: 'Your account has been approved!',
-        html: `<p>Hello ${user.username},</p><p>Your account has been approved. You can now log in and use the website.</p>`
-      })
-    });
-
-    if (!emailResponse.ok) {
-      const errorText = await emailResponse.text();
-      console.error('Error sending approval email:', errorText);
+    // Send approval email via Nodemailer
+    try {
+      await sendEmail(
+        email,
+        'Your account has been approved!',
+        `Hello ${user.username},\n\nYour account has been approved. You can now log in and use the website.`,
+        `<p>Hello ${user.username},</p><p>Your account has been approved. You can now log in and use the website.</p>`
+      );
+    } catch (emailErr) {
+      console.error('Error sending approval email:', emailErr);
       // Optionally, you can still return success but log the email error
     }
 
@@ -140,6 +132,20 @@ router.post('/reject-user', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     await user.destroy();
+
+    // Send rejection email via Nodemailer
+    try {
+      await sendEmail(
+        email,
+        'Your account signup was rejected',
+        `Hello ${user.username},\n\nYour signup was rejected. Please contact administration for more information.`,
+        `<p>Hello ${user.username},</p><p>Your signup was rejected. Please contact administration for more information.</p>`
+      );
+    } catch (emailErr) {
+      console.error('Error sending rejection email:', emailErr);
+      // Optionally, you can still return success but log the email error
+    }
+
     res.json({ message: 'User rejected and deleted successfully' });
   } catch (err) {
     console.error('Error rejecting user:', err);

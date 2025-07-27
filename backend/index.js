@@ -1,130 +1,100 @@
-require('dotenv').config();
+/**
+ * Minimal JWT Authentication Example with Node.js + Express
+ * 
+ * Requirements:
+ * - Uses jsonwebtoken and dotenv packages
+ * - In-memory user store for simplicity
+ * - Signup and login routes generating JWT tokens
+ * - Authentication middleware verifying JWT tokens from Authorization header
+ * - Protected sample route
+ * - JWT secret key loaded from .env
+ */
+
 const express = require('express');
-const cors = require('cors');
-const sequelize = require('./models');
-const http = require('http');
-const { Server } = require('socket.io');
-const { ClubChatMessage } = require('./models/ClubChatMessage');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
-  }
-});
-app.set('io', io); // Make io accessible in routes
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors()); // Enable CORS for all routes
+// Middleware to parse JSON bodies
 app.use(express.json());
 
-// Connect to MySQL using Sequelize
-sequelize.sequelize.authenticate()
-  .then(() => {
-    console.log('Connected to MySQL database.');
-  })
-  .catch((err) => {
-    console.error('Unable to connect to MySQL database:', err);
+// In-memory user store (username -> password)
+const users = {};
+
+/**
+ * Generate JWT token for a given username
+ * @param {string} username 
+ * @returns {string} JWT token
+ */
+function generateToken(username) {
+  return jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+}
+
+/**
+ * Authentication middleware to verify JWT token from Authorization header
+ */
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  // Authorization header format: "Bearer <token>"
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Missing token' });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ message: 'Invalid or expired token' });
+    req.user = user; // Attach decoded user info to request
+    next();
   });
+}
 
-// Basic route
-app.get('/', (req, res) => {
-  res.send('Backend is running!');
-});
-
-// Health check endpoint to check server and MySQL connection status
-app.get('/health', async (req, res) => {
-  try {
-    await sequelize.authenticate();
-    res.json({
-      server: 'running',
-      mysql: 'connected'
-    });
-  } catch (error) {
-    res.json({
-      server: 'running',
-      mysql: 'disconnected',
-      error: error.message
-    });
+/**
+ * Signup route
+ * Expects JSON body: { username, password }
+ * Stores user in-memory and returns JWT token
+ */
+app.post('/signup', (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username and password required' });
   }
+  if (users[username]) {
+    return res.status(409).json({ message: 'User already exists' });
+  }
+  users[username] = password;
+  const token = generateToken(username);
+  res.status(201).json({ message: 'User created', token });
 });
 
-const authRoutes = require('./routes/auth');
-app.use('/api/auth', authRoutes);
-const leaderboardRoutes = require('./routes/leaderboard');
-app.use('/api/leaderboard', leaderboardRoutes);
-const eventsRoutes = require('./routes/events');
-app.use('/api/events', eventsRoutes);
-const clubsRoutes = require('./routes/clubs');
-app.use('/api/clubs', clubsRoutes);
-const clubMembershipRoutes = require('./routes/clubMembership');
-app.use('/api/club-membership', clubMembershipRoutes);
-const clubPostsRoutes = require('./routes/clubPosts');
-app.use('/api/club-posts', clubPostsRoutes);
-const clubCommentsRoutes = require('./routes/clubComments');
-app.use('/api/club-comments', clubCommentsRoutes);
-const clubAchievementsRoutes = require('./routes/clubAchievements');
-app.use('/api/club-achievements', clubAchievementsRoutes);
-const clubFilesRoutes = require('./routes/clubFiles');
-app.use('/api/club-files', clubFilesRoutes);
-const clubLeaderboardRoutes = require('./routes/clubLeaderboard');
-app.use('/api/club-leaderboard', clubLeaderboardRoutes);
-const clubChatRoutes = require('./routes/clubChat');
-app.use('/api/club-chat', clubChatRoutes);
-const newsRoutes = require('./routes/news');
-app.use('/api/news', newsRoutes);
-const notesRoutes = require('./routes/notes');
-app.use('/api/notes', notesRoutes);
-const quizzesRoutes = require('./routes/quizzes');
-app.use('/api/quizzes', quizzesRoutes);
-const notificationsRoutes = require('./routes/notifications');
-app.use('/api/notifications', notificationsRoutes);
-const askPeterRoutes = require('./routes/askPeter');
-app.use('/api/ask-peter', askPeterRoutes);
-// TODO: Add other routes here
-
-// --- SOCKET.IO REAL-TIME CHAT ---
-io.on('connection', (socket) => {
-  // Join a club chat room
-  socket.on('joinClub', ({ clubId, userId }) => {
-    socket.join(`club_${clubId}`);
-    socket.to(`club_${clubId}`).emit('userJoined', { userId });
-  });
-
-  // Handle sending a message
-  socket.on('sendMessage', async (data) => {
-    // data: { clubId, userId, content, fileUrl, fileType }
-    const message = await ClubChatMessage.create({
-      clubId: data.clubId,
-      userId: data.userId,
-      content: data.content,
-      fileUrl: data.fileUrl,
-      fileType: data.fileType,
-      seen: false
-    });
-    io.to(`club_${data.clubId}`).emit('receiveMessage', message);
-  });
-
-  // Typing status
-  socket.on('typing', ({ clubId, userId }) => {
-    socket.to(`club_${clubId}`).emit('typing', { userId });
-  });
-
-  // Read/seen status
-  socket.on('seen', async ({ clubId, messageId, userId }) => {
-    await ClubChatMessage.update({ seen: true }, { where: { id: messageId } });
-    io.to(`club_${clubId}`).emit('seen', { messageId, userId });
-  });
-
-  // Disconnect
-  socket.on('disconnect', () => {
-    // Optionally handle user disconnect
-  });
+/**
+ * Login route
+ * Expects JSON body: { username, password }
+ * Verifies user and returns JWT token
+ */
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username and password required' });
+  }
+  const storedPassword = users[username];
+  if (!storedPassword || storedPassword !== password) {
+    return res.status(401).json({ message: 'Invalid credentials' });
+  }
+  const token = generateToken(username);
+  res.json({ message: 'Login successful', token });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+/**
+ * Protected sample route
+ * Requires valid JWT token
+ */
+app.get('/protected', authenticateToken, (req, res) => {
+  res.json({ message: `Hello, ${req.user.username}! This is a protected route.` });
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
