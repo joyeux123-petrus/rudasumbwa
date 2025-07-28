@@ -13,16 +13,20 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Enable CORS for all origins (for development)
+app.use(cors());
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// In-memory user store (username -> password)
+// In-memory user store (username -> user object)
+// Example: users[username] = { username, password, createdAt, status }
 const users = {};
 
 /**
@@ -63,7 +67,35 @@ app.post('/signup', (req, res) => {
   if (users[username]) {
     return res.status(409).json({ message: 'User already exists' });
   }
-  users[username] = password;
+  users[username] = {
+    username,
+    password, // In production, hash this!
+    createdAt: new Date().toISOString(),
+    status: 'Active'
+  };
+  const token = generateToken(username);
+  res.status(201).json({ message: 'User created', token });
+});
+
+/**
+ * API Auth Signup route (for frontend compatibility)
+ * Expects JSON body: { username, password }
+ * Stores user in-memory and returns JWT token
+ */
+app.post('/api/auth/signup', (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username and password required' });
+  }
+  if (users[username]) {
+    return res.status(409).json({ message: 'User already exists' });
+  }
+  users[username] = {
+    username,
+    password, // In production, hash this!
+    createdAt: new Date().toISOString(),
+    status: 'Active'
+  };
   const token = generateToken(username);
   res.status(201).json({ message: 'User created', token });
 });
@@ -78,12 +110,36 @@ app.post('/login', (req, res) => {
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password required' });
   }
-  const storedPassword = users[username];
-  if (!storedPassword || storedPassword !== password) {
+  const user = users[username];
+  if (!user || user.password !== password) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
   const token = generateToken(username);
   res.json({ message: 'Login successful', token });
+});
+
+/**
+ * Get all users (for admin dashboard)
+ * Optionally filter by status query param (not implemented, returns all users)
+ */
+app.get('/api/auth/users', (req, res) => {
+  // Accept and ignore status query param for compatibility
+  const { status } = req.query;
+  // Return all user details except password
+  let userList = Object.values(users).map(({ password, ...user }) => user);
+  // Optionally filter by status if provided
+  if (status) {
+    userList = userList.filter(user => user.status === status);
+  }
+  res.json({ users: userList });
+});
+
+/**
+ * Placeholder notifications endpoint
+ */
+app.get('/api/notifications', (req, res) => {
+  // Return an empty notifications array for now
+  res.json({ notifications: [] });
 });
 
 /**
@@ -94,6 +150,7 @@ app.get('/protected', authenticateToken, (req, res) => {
   res.json({ message: `Hello, ${req.user.username}! This is a protected route.` });
 });
 
+console.log("=== RUNNING UPDATED BACKEND WITH NOTIFICATIONS ENDPOINT ===");
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
