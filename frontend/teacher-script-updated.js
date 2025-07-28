@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
-      const response = await fetch('/api/quiz/create-quiz', {
+      const response = await fetch('http://localhost:3000/api/quiz/create-quiz', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(quiz)

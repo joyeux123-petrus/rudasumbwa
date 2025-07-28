@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Call Gemini API
             let answer = '';
             try {
-                const response = await fetch('/api/ask-peter', {
+                const response = await fetch('http://localhost:3000/api/ask-peter', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: question })

@@ -13,14 +13,120 @@
     <script src="https://unpkg.com/aframe@1.4.2/dist/aframe.min.js"></script>
     <style>
         body { font-family: 'Inter', 'Poppins', 'SF Pro Display', sans-serif; }
+        html.dark, body.dark, body {
+            background: linear-gradient(135deg, #181c2b 0%, #232946 100%) !important;
+            color: #e0e6f7;
+        }
+        .glass {
+            background: rgba(36, 40, 56, 0.55);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+        .glassmorphic {
+            background: rgba(36, 40, 56, 0.45);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.10);
+        }
+        .dashboard-section, .gospel-card, .club-card, .leaderboard-student, .leaderboard-club, .bg-white, .p-6, .p-8 {
+            background: rgba(36, 40, 56, 0.55) !important;
+            color: #e0e6f7 !important;
+            border-color: rgba(255,255,255,0.10) !important;
+        }
+        .sidebar-link {
+            background: rgba(36, 40, 56, 0.25);
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(80, 100, 255, 0.25);
+            color: #ffd700 !important;
+            box-shadow: 0 2px 8px 0 rgba(80, 100, 255, 0.10);
+        }
+        .shadow-lg, .shadow-2xl {
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18) !important;
+        }
+        .material-icons {
+            color: #ffd700;
+        }
+        .club-tag.active, .club-tag:focus {
+            background: rgba(80, 100, 255, 0.25);
+            color: #ffd700;
+        }
+        .club-tag {
+            background: rgba(36, 40, 56, 0.25);
+            color: #e0e6f7;
+            border-radius: 9999px;
+            padding: 0.5rem 1.25rem;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.10);
+            transition: background 0.3s, color 0.3s;
+        }
+        .join-btn {
+            background: linear-gradient(90deg, #5f72bd 0%, #9b23ea 100%);
+            color: #fff;
+            border-radius: 1rem;
+            padding: 0.5rem 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px 0 rgba(80, 100, 255, 0.10);
+            transition: background 0.3s, transform 0.2s;
+        }
+        .join-btn:hover {
+            background: linear-gradient(90deg, #9b23ea 0%, #5f72bd 100%);
+            transform: scale(1.05);
+        }
+        .gospel-card {
+            background: rgba(36, 40, 56, 0.65) !important;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.10);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            padding: 2rem;
+        }
+        .gospel-header h2 {
+            color: #ffd700;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .gospel-header p {
+            color: #e0e6f7;
+        }
+        .gospel-content h4 {
+            color: #ffd700;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .gospel-content p {
+            color: #e0e6f7;
+        }
+        .badge {
+            background: rgba(255,255,255,0.10);
+            color: #ffd700;
+            border-radius: 9999px;
+            padding: 0.25rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .transition, .transition-all, .transition-transform {
+            transition: all 0.3s cubic-bezier(.4,0,.2,1);
+        }
+        /* Responsive fixes for dark glassmorphism */
+        @media (max-width: 768px) {
+            .dashboard-section, .gospel-card, .club-card, .leaderboard-student, .leaderboard-club {
+                padding: 1rem !important;
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen relative">
+<body class="dark bg-gray-900 text-gray-100 min-h-screen relative">
     <!-- Sidebar Overlay for mobile -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-30 hidden"></div>
     <div class="flex min-h-screen">
         <!-- Sidebar Navigation -->
-        <aside id="sidebar" class="fixed md:static top-0 left-0 h-full w-64 bg-indigo-900 flex flex-col justify-between py-8 px-2 shadow-2xl z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+        <aside id="sidebar" class="fixed md:static top-0 left-0 h-full w-64 glass flex flex-col justify-between py-8 px-2 shadow-2xl z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
             <div>
                 <div class="flex items-center justify-between mb-10 px-4">
                     <img src="assets/images/profile-placeholder.png" alt="Profile" class="w-16 h-16 rounded-full border-4 border-blue-400 shadow-lg">
@@ -53,7 +159,7 @@
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col">
             <!-- Top Bar/Header -->
-            <header class="flex flex-col bg-indigo-800 shadow-lg z-10">
+            <header class="flex flex-col bg-indigo-900 shadow-lg z-10 glass">
                 <div class="flex items-center justify-between px-8 pt-4">
                     <div class="flex items-center space-x-4">
                         <img src="images/logo.PNG" alt="School Logo" class="w-10 h-10 rounded-full bg-white border-2 border-blue-400">
@@ -73,31 +179,53 @@
                 </div>
             </header>
             <!-- Main Dashboard Content -->
-            <main class="flex-1 overflow-y-auto p-10 bg-white">
+            <main class="flex-1 overflow-y-auto p-10">
                 <!-- Dashboard Main: Leaderboard, Announcements, Learning Center Tabs -->
-                <section id="dashboard-main" class="dashboard-section">
+                <section id="dashboard-main" class="dashboard-section glassmorphic">
+                    <!-- Roles & Permissions -->
+                    <div class="mb-8">
+                        <div class="glassmorphic p-6 rounded-2xl shadow flex flex-col md:flex-row gap-6 items-center border border-blue-400">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">school</span>Teachers</h3>
+                                <ul class="list-disc ml-8 text-gray-300">
+                                    <li>Can create classes, quizzes, notes</li>
+                                    <li>View student submissions</li>
+                                    <li>Grade them</li>
+                                </ul>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-yellow-400 mb-2 flex items-center"><span class="material-icons mr-2">person</span>Students</h3>
+                                <ul class="list-disc ml-8 text-gray-300">
+                                    <li>Can join classes</li>
+                                    <li>View notes</li>
+                                    <li>Submit quizzes</li>
+                                    <li>View score</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Leaderboard -->
-                    <h2 class="text-2xl font-bold text-indigo-900 mb-6">Top Students Leaderboard</h2>
+                    <h2 class="text-2xl font-bold text-yellow-400 mb-6">Top Students Leaderboard</h2>
                     <div class="flex flex-col items-center gap-6 mb-10">
-                        <div class="leaderboard-student w-full max-w-xl flex items-center bg-white rounded-2xl shadow-lg border border-yellow-300 p-4 cursor-pointer hover:bg-yellow-50 transition" data-name="Jean Bosco">
+                        <div class="leaderboard-student w-full max-w-xl flex items-center glassmorphic p-4 cursor-pointer hover:scale-105 transition-transform border border-yellow-300" data-name="Jean Bosco">
                             <img src="assets/images/profile-placeholder.png" alt="Jean Bosco" class="w-16 h-16 rounded-full border-4 border-yellow-400 shadow mr-4">
                             <div class="flex-1">
-                                <div class="font-bold text-lg text-yellow-700 flex items-center">Jean Bosco <span class="ml-2 text-2xl">🥇</span></div>
-                                <div class="text-sm text-gray-600">Gold - 1500 XP</div>
+                                <div class="font-bold text-lg text-yellow-400 flex items-center">Jean Bosco <span class="ml-2 text-2xl">🥇</span></div>
+                                <div class="text-sm text-gray-300">Gold - 1500 XP</div>
                             </div>
                         </div>
-                        <div class="leaderboard-student w-full max-w-xl flex items-center bg-white rounded-2xl shadow-lg border border-gray-300 p-4 cursor-pointer hover:bg-gray-50 transition" data-name="Marie Claire">
+                        <div class="leaderboard-student w-full max-w-xl flex items-center glassmorphic p-4 cursor-pointer hover:scale-105 transition-transform border border-gray-300" data-name="Marie Claire">
                             <img src="assets/images/profile-placeholder.png" alt="Marie Claire" class="w-16 h-16 rounded-full border-4 border-gray-400 shadow mr-4">
                             <div class="flex-1">
-                                <div class="font-bold text-lg text-gray-700 flex items-center">Marie Claire <span class="ml-2 text-2xl">🥈</span></div>
-                                <div class="text-sm text-gray-600">Silver - 1400 XP</div>
+                                <div class="font-bold text-lg text-gray-200 flex items-center">Marie Claire <span class="ml-2 text-2xl">🥈</span></div>
+                                <div class="text-sm text-gray-300">Silver - 1400 XP</div>
                             </div>
                         </div>
-                        <div class="leaderboard-student w-full max-w-xl flex items-center bg-white rounded-2xl shadow-lg border border-yellow-800 p-4 cursor-pointer hover:bg-yellow-100 transition" data-name="You">
+                        <div class="leaderboard-student w-full max-w-xl flex items-center glassmorphic p-4 cursor-pointer hover:scale-105 transition-transform border border-yellow-800" data-name="You">
                             <img src="assets/images/profile-placeholder.png" alt="You" class="w-16 h-16 rounded-full border-4 border-yellow-800 shadow mr-4">
                             <div class="flex-1">
-                                <div class="font-bold text-lg text-yellow-900 flex items-center">You <span class="ml-2 text-2xl">🥉</span></div>
-                                <div class="text-sm text-gray-600">Bronze - 1300 XP</div>
+                                <div class="font-bold text-lg text-yellow-600 flex items-center">You <span class="ml-2 text-2xl">🥉</span></div>
+                                <div class="text-sm text-gray-300">Bronze - 1300 XP</div>
                             </div>
                         </div>
                     </div>
@@ -115,42 +243,42 @@
                     </div>
                     <!-- Student Modal -->
                     <div id="student-modal-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-50 hidden"></div>
-                    <div id="student-modal" class="fixed top-1/2 left-1/2 z-50 bg-white rounded-2xl shadow-2xl border border-blue-200 w-96 p-6 transform -translate-x-1/2 -translate-y-1/2 hidden">
+                    <div id="student-modal" class="fixed top-1/2 left-1/2 z-50 glassmorphic w-96 p-6 transform -translate-x-1/2 -translate-y-1/2 hidden">
                         <div class="flex items-center justify-between mb-4">
-                            <span class="font-bold text-lg text-blue-700">Student Details</span>
-                            <button id="student-modal-close" class="text-blue-700 text-2xl focus:outline-none"><span class="material-icons">close</span></button>
+                            <span class="font-bold text-lg text-blue-400">Student Details</span>
+                            <button id="student-modal-close" class="text-blue-400 text-2xl focus:outline-none"><span class="material-icons">close</span></button>
                         </div>
                         <div class="flex flex-col items-center mb-4">
                             <img id="student-modal-avatar" src="assets/images/profile-placeholder.png" alt="Avatar" class="w-20 h-20 rounded-full border-4 border-blue-400 shadow mb-2">
                             <div class="font-bold text-xl mb-1" id="student-modal-name">Name</div>
                             <div class="text-2xl mb-1" id="student-modal-medal">🥇</div>
-                            <div class="text-gray-600 mb-1" id="student-modal-class">Class</div>
+                            <div class="text-gray-300 mb-1" id="student-modal-class">Class</div>
                             <div class="mb-1" id="student-modal-clubs"></div>
-                            <div class="text-blue-600 font-bold" id="student-modal-xp">XP</div>
+                            <div class="text-blue-400 font-bold" id="student-modal-xp">XP</div>
                         </div>
                         <button class="w-full bg-blue-600 text-white px-4 py-2 rounded-xl shadow hover:bg-blue-700 transition-all font-semibold">View Full Profile</button>
                     </div>
                     <!-- Announcements -->
-                    <h2 class="text-2xl font-bold text-indigo-900 mb-4">Announcements</h2>
+                    <h2 class="text-2xl font-bold text-yellow-400 mb-4">Announcements</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                        <div class="bg-white rounded-2xl p-6 shadow border border-gray-200">
+                        <div class="glassmorphic rounded-2xl p-6 shadow border border-gray-200">
                             <div class="flex items-center mb-2">
-                                <span class="material-icons text-blue-500 mr-2">campaign</span>
+                                <span class="material-icons text-blue-400 mr-2">campaign</span>
                                 <span class="font-bold text-lg">New exam schedule released!</span>
                             </div>
-                            <div class="text-gray-600 mb-2">Unread</div>
+                            <div class="text-gray-300 mb-2">Unread</div>
                             <div class="flex space-x-2">
                                 <button class="text-2xl">🎉</button>
                                 <button class="text-2xl">👏</button>
                                 <button class="text-2xl">🙏</button>
                             </div>
                         </div>
-                        <div class="bg-white rounded-2xl p-6 shadow border border-gray-200">
+                        <div class="glassmorphic rounded-2xl p-6 shadow border border-gray-200">
                             <div class="flex items-center mb-2">
-                                <span class="material-icons text-blue-500 mr-2">campaign</span>
+                                <span class="material-icons text-blue-400 mr-2">campaign</span>
                                 <span class="font-bold text-lg">Science Club meeting this Friday.</span>
                             </div>
-                            <div class="text-gray-600 mb-2">Read</div>
+                            <div class="text-gray-300 mb-2">Read</div>
                             <div class="flex space-x-2">
                                 <button class="text-2xl">🎉</button>
                                 <button class="text-2xl">👏</button>
@@ -159,32 +287,32 @@
                         </div>
                     </div>
                     <!-- Learning Center Cards -->
-                    <h2 class="text-2xl font-bold text-indigo-900 mb-4">Learning Center</h2>
+                    <h2 class="text-2xl font-bold text-yellow-400 mb-4">Learning Center</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                        <div class="bg-white rounded-2xl p-8 shadow-lg border border-blue-100 flex flex-col items-center hover:scale-105 transition-transform cursor-pointer group" onclick="window.location.href='student-notes.html'">
-                            <span class="material-icons text-5xl text-blue-600 mb-4 group-hover:animate-bounce">menu_book</span>
+                        <div class="glassmorphic p-8 shadow-lg border border-blue-100 flex flex-col items-center hover:scale-105 transition-transform cursor-pointer group" onclick="window.location.href='student-notes.html'">
+                            <span class="material-icons text-5xl text-blue-400 mb-4 group-hover:animate-bounce">menu_book</span>
                             <div class="font-bold text-xl mb-2">Notes</div>
-                            <div class="text-gray-600 mb-4">View and download all your subject notes.</div>
+                            <div class="text-gray-300 mb-4">View and download all your subject notes.</div>
                             <button class="bg-blue-600 text-white px-6 py-2 rounded-xl shadow hover:bg-blue-700 transition-all font-semibold">Open Notes</button>
                         </div>
-                        <div class="bg-white rounded-2xl p-8 shadow-lg border border-green-100 flex flex-col items-center hover:scale-105 transition-transform cursor-pointer group">
-                            <span class="material-icons text-5xl text-green-600 mb-4 group-hover:animate-bounce">quiz</span>
+                        <div class="glassmorphic p-8 shadow-lg border border-green-100 flex flex-col items-center hover:scale-105 transition-transform cursor-pointer group">
+                            <span class="material-icons text-5xl text-green-400 mb-4 group-hover:animate-bounce">quiz</span>
                             <div class="font-bold text-xl mb-2">Quiz</div>
-                            <div class="text-gray-600 mb-4">Take quizzes and view your results instantly.</div>
+                            <div class="text-gray-300 mb-4">Take quizzes and view your results instantly.</div>
                             <button class="bg-green-600 text-white px-6 py-2 rounded-xl shadow hover:bg-green-700 transition-all font-semibold">Start Quiz</button>
                         </div>
-                        <div class="bg-white rounded-2xl p-8 shadow-lg border border-purple-100 flex flex-col items-center hover:scale-105 transition-transform cursor-pointer group" onclick="window.location.href='brainwave.html'">
-                            <span class="material-icons text-5xl text-purple-600 mb-4 group-hover:animate-bounce">psychology</span>
+                        <div class="glassmorphic p-8 shadow-lg border border-purple-100 flex flex-col items-center hover:scale-105 transition-transform cursor-pointer group" onclick="window.location.href='brainwave.html'">
+                            <span class="material-icons text-5xl text-purple-400 mb-4 group-hover:animate-bounce">psychology</span>
                             <div class="font-bold text-xl mb-2">Brainwave</div>
-                            <div class="text-gray-600 mb-4">Get AI-powered study tips and summaries.</div>
+                            <div class="text-gray-300 mb-4">Get AI-powered study tips and summaries.</div>
                             <button onclick="window.location.href='brainwave.html'" class="bg-purple-600 text-white px-6 py-2 rounded-xl shadow hover:bg-purple-700 transition-all font-semibold">AI Suggestion</button>
                         </div>
                     </div>
                 </section>
                 <!-- All other sections, each with class 'dashboard-section' and unique id, hidden by default -->
-                <section id="progress" class="dashboard-section hidden"> ... </section>
-                <section id="grades" class="dashboard-section hidden"> ... </section>
-                <section id="gospel" class="dashboard-section">
+                <section id="progress" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="grades" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="gospel" class="dashboard-section glassmorphic">
                   <div class="gospel-card">
                     <div class="gospel-header">
                       <h2>📖 Gospel of the Day</h2>
@@ -197,12 +325,12 @@
                     </div>
                   </div>
                 </section>
-                <section id="schedule" class="dashboard-section hidden"> ... </section>
-                <section id="announcements" class="dashboard-section hidden"> ... </section>
-                <section id="clubs" class="dashboard-section hidden">
+                <section id="schedule" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="announcements" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="clubs" class="dashboard-section hidden glassmorphic">
                   <!-- Clubs Showcase Section -->
                   <div class="clubs-showcase py-8">
-                    <h2 class="text-3xl font-extrabold text-center text-indigo-900 mb-6 tracking-tight">🌟 Explore Our Clubs</h2>
+                    <h2 class="text-3xl font-extrabold text-center text-yellow-400 mb-6 tracking-tight">🌟 Explore Our Clubs</h2>
                     <!-- Filterable Tags -->
                     <div class="flex flex-wrap justify-center gap-3 mb-8">
                       <button class="club-tag active" data-tag="all">All</button>
@@ -221,13 +349,13 @@
                           <span class="text-4xl">🔬</span>
                           <h3 class="text-xl font-bold">Science Club</h3>
                         </div>
-                        <p class="text-indigo-700 font-semibold mb-1">"Discover the universe with us!"</p>
-                        <p class="desc text-gray-700 mb-2">We explore fascinating experiments and organize science fairs. Open to curious minds!</p>
+                        <p class="text-yellow-400 font-semibold mb-1">"Discover the universe with us!"</p>
+                        <p class="desc text-gray-300 mb-2">We explore fascinating experiments and organize science fairs. Open to curious minds!</p>
                         <div class="badges flex gap-2 mb-2">
                           <span class="badge">🧪 Weekly Experiments</span>
                           <span class="badge">🥇 2024 Winner</span>
                         </div>
-                        <div class="club-shout text-xs italic text-blue-500 mb-2">📢 "Science Fair coming soon!"</div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "Science Fair coming soon!"</div>
                         <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
                       </div>
                       <div class="club-card glassmorphic group" data-tags="music">
@@ -235,13 +363,13 @@
                           <span class="text-4xl">🎵</span>
                           <h3 class="text-xl font-bold">Music Club</h3>
                         </div>
-                        <p class="text-indigo-700 font-semibold mb-1">"Feel the rhythm, live the beat."</p>
-                        <p class="desc text-gray-700 mb-2">Band rehearsals, music production, and live performances. All talents welcome!</p>
+                        <p class="text-yellow-400 font-semibold mb-1">"Feel the rhythm, live the beat."</p>
+                        <p class="desc text-gray-300 mb-2">Band rehearsals, music production, and live performances. All talents welcome!</p>
                         <div class="badges flex gap-2 mb-2">
                           <span class="badge">🎤 Live Shows</span>
                           <span class="badge">🏆 Top Club 2023</span>
                         </div>
-                        <div class="club-shout text-xs italic text-blue-500 mb-2">📢 "Preparing for Inter-school Music Fest!"</div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "Preparing for Inter-school Music Fest!"</div>
                         <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
                       </div>
                       <div class="club-card glassmorphic group" data-tags="art">
@@ -249,13 +377,13 @@
                           <span class="text-4xl">🎨</span>
                           <h3 class="text-xl font-bold">Art Club</h3>
                         </div>
-                        <p class="text-indigo-700 font-semibold mb-1">"Unleashing Creativity."</p>
-                        <p class="desc text-gray-700 mb-2">Painting, drawing, and digital art workshops. Express yourself!</p>
+                        <p class="text-yellow-400 font-semibold mb-1">"Unleashing Creativity."</p>
+                        <p class="desc text-gray-300 mb-2">Painting, drawing, and digital art workshops. Express yourself!</p>
                         <div class="badges flex gap-2 mb-2">
                           <span class="badge">🖌️ Art Exhibits</span>
                           <span class="badge">⭐ Most Creative</span>
                         </div>
-                        <div class="club-shout text-xs italic text-blue-500 mb-2">📢 "Art Expo next month!"</div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "Art Expo next month!"</div>
                         <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
                       </div>
                       <div class="club-card glassmorphic group" data-tags="drama">
@@ -263,13 +391,13 @@
                           <span class="text-4xl">🎭</span>
                           <h3 class="text-xl font-bold">Drama Club</h3>
                         </div>
-                        <p class="text-indigo-700 font-semibold mb-1">"Express, Act, Inspire."</p>
-                        <p class="desc text-gray-700 mb-2">Performing arts and creative theatre productions for all students.</p>
+                        <p class="text-yellow-400 font-semibold mb-1">"Express, Act, Inspire."</p>
+                        <p class="desc text-gray-300 mb-2">Performing arts and creative theatre productions for all students.</p>
                         <div class="badges flex gap-2 mb-2">
                           <span class="badge">🎬 Stage Play</span>
                           <span class="badge">🏆 Winner 2023</span>
                         </div>
-                        <div class="club-shout text-xs italic text-blue-500 mb-2">📢 "Drama Night in June!"</div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "Drama Night in June!"</div>
                         <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
                       </div>
                       <div class="club-card glassmorphic group" data-tags="coding">
@@ -277,13 +405,13 @@
                           <span class="text-4xl">🤖</span>
                           <h3 class="text-xl font-bold">Coding Club</h3>
                         </div>
-                        <p class="text-indigo-700 font-semibold mb-1">"Code. Create. Conquer."</p>
-                        <p class="desc text-gray-700 mb-2">Learn programming, build apps, and compete in hackathons!</p>
+                        <p class="text-yellow-400 font-semibold mb-1">"Code. Create. Conquer."</p>
+                        <p class="desc text-gray-300 mb-2">Learn programming, build apps, and compete in hackathons!</p>
                         <div class="badges flex gap-2 mb-2">
                           <span class="badge">💻 Hackathons</span>
                           <span class="badge">🥈 Runner-up 2024</span>
                         </div>
-                        <div class="club-shout text-xs italic text-blue-500 mb-2">📢 "App Challenge this term!"</div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "App Challenge this term!"</div>
                         <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
                       </div>
                       <div class="club-card glassmorphic group" data-tags="football">
@@ -291,53 +419,53 @@
                           <span class="text-4xl">⚽</span>
                           <h3 class="text-xl font-bold">Football Club</h3>
                         </div>
-                        <p class="text-indigo-700 font-semibold mb-1">"Play. Win. Repeat."</p>
-                        <p class="desc text-gray-700 mb-2">Teamwork, training, and tournaments. For all skill levels!</p>
+                        <p class="text-yellow-400 font-semibold mb-1">"Play. Win. Repeat."</p>
+                        <p class="desc text-gray-300 mb-2">Teamwork, training, and tournaments. For all skill levels!</p>
                         <div class="badges flex gap-2 mb-2">
                           <span class="badge">🏅 League Champs</span>
                           <span class="badge">🔥 Active Now</span>
                         </div>
-                        <div class="club-shout text-xs italic text-blue-500 mb-2">📢 "Training every Saturday!"</div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "Training every Saturday!"</div>
                         <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
                       </div>
                     </div>
                     <!-- Leaderboard -->
                     <div class="mt-12">
-                      <h3 class="text-xl font-bold text-center text-indigo-800 mb-4">🏆 Top Clubs This Term</h3>
+                      <h3 class="text-xl font-bold text-center text-yellow-400 mb-4">🏆 Top Clubs This Term</h3>
                       <div class="flex flex-wrap justify-center gap-6">
-                        <div class="leaderboard-club bg-white bg-opacity-80 rounded-2xl shadow-lg px-6 py-4 flex flex-col items-center border-2 border-yellow-400">
+                        <div class="leaderboard-club glassmorphic px-6 py-4 flex flex-col items-center border-2 border-yellow-400">
                           <span class="text-3xl mb-1">🥇</span>
-                          <span class="font-bold text-lg text-yellow-700">Music Club</span>
-                          <span class="text-sm text-gray-700">90 Points</span>
+                          <span class="font-bold text-lg text-yellow-400">Music Club</span>
+                          <span class="text-sm text-gray-300">90 Points</span>
                         </div>
-                        <div class="leaderboard-club bg-white bg-opacity-80 rounded-2xl shadow-lg px-6 py-4 flex flex-col items-center border-2 border-gray-400">
+                        <div class="leaderboard-club glassmorphic px-6 py-4 flex flex-col items-center border-2 border-gray-400">
                           <span class="text-3xl mb-1">🥈</span>
-                          <span class="font-bold text-lg text-gray-700">Science Club</span>
-                          <span class="text-sm text-gray-700">82 Points</span>
+                          <span class="font-bold text-lg text-gray-200">Science Club</span>
+                          <span class="text-sm text-gray-300">82 Points</span>
                         </div>
-                        <div class="leaderboard-club bg-white bg-opacity-80 rounded-2xl shadow-lg px-6 py-4 flex flex-col items-center border-2 border-yellow-800">
+                        <div class="leaderboard-club glassmorphic px-6 py-4 flex flex-col items-center border-2 border-yellow-800">
                           <span class="text-3xl mb-1">🥉</span>
-                          <span class="font-bold text-lg text-yellow-900">ICT Club</span>
-                          <span class="text-sm text-gray-700">79 Points</span>
+                          <span class="font-bold text-lg text-yellow-600">ICT Club</span>
+                          <span class="text-sm text-gray-300">79 Points</span>
                         </div>
                       </div>
                     </div>
                   </div>
                 </section>
-                <section id="ai" class="dashboard-section hidden"> ... </section>
-                <section id="pending" class="dashboard-section hidden"> ... </section>
-                <section id="feedback" class="dashboard-section hidden"> ... </section>
-                <section id="download" class="dashboard-section hidden"> ... </section>
-                <section id="spiritual" class="dashboard-section hidden"> ... </section>
-                <section id="comments" class="dashboard-section hidden"> ... </section>
-                <section id="settings" class="dashboard-section hidden">
-  <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-    <h2 class="text-3xl font-bold text-indigo-900 mb-6 flex items-center"><span class="material-icons mr-2">settings</span>Settings</h2>
+                <section id="ai" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="pending" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="feedback" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="download" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="spiritual" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="comments" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="settings" class="dashboard-section hidden glassmorphic">
+  <div class="max-w-3xl mx-auto glassmorphic p-8 border border-gray-200">
+    <h2 class="text-3xl font-bold text-yellow-400 mb-6 flex items-center"><span class="material-icons mr-2">settings</span>Settings</h2>
     <div class="space-y-8">
       <!-- Account Settings -->
       <div>
-        <h3 class="text-xl font-semibold text-indigo-800 mb-2 flex items-center"><span class="material-icons mr-2">lock</span>Account Settings</h3>
-        <ul class="list-disc ml-8 text-gray-700 space-y-1">
+        <h3 class="text-xl font-semibold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">lock</span>Account Settings</h3>
+        <ul class="list-disc ml-8 text-gray-300 space-y-1">
           <li>Change password</li>
           <li>Update profile photo</li>
           <li>Edit personal info (name, class, district, parish)</li>
@@ -347,8 +475,8 @@
       </div>
       <!-- Academic Preferences -->
       <div>
-        <h3 class="text-xl font-semibold text-indigo-800 mb-2 flex items-center"><span class="material-icons mr-2">school</span>Academic Preferences</h3>
-        <ul class="list-disc ml-8 text-gray-700 space-y-1">
+        <h3 class="text-xl font-semibold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">school</span>Academic Preferences</h3>
+        <ul class="list-disc ml-8 text-gray-300 space-y-1">
           <li>Choose preferred subject categories</li>
           <li>Enable/disable notifications for:
             <ul class="list-disc ml-8">
@@ -361,24 +489,24 @@
       </div>
       <!-- UI/Theme -->
       <div>
-        <h3 class="text-xl font-semibold text-indigo-800 mb-2 flex items-center"><span class="material-icons mr-2">palette</span>UI/Theme</h3>
-        <ul class="list-disc ml-8 text-gray-700 space-y-1">
+        <h3 class="text-xl font-semibold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">palette</span>UI/Theme</h3>
+        <ul class="list-disc ml-8 text-gray-300 space-y-1">
           <li>Dark/Light mode toggle</li>
           <li>Language preference (Kinyarwanda, English, French)</li>
         </ul>
       </div>
       <!-- Notifications -->
       <div>
-        <h3 class="text-xl font-semibold text-indigo-800 mb-2 flex items-center"><span class="material-icons mr-2">notifications</span>Notifications</h3>
-        <ul class="list-disc ml-8 text-gray-700 space-y-1">
+        <h3 class="text-xl font-semibold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">notifications</span>Notifications</h3>
+        <ul class="list-disc ml-8 text-gray-300 space-y-1">
           <li>Manage email/sms/onsite notification preferences</li>
           <li>Mute notifications during specific hours</li>
         </ul>
       </div>
       <!-- Contact & Support -->
       <div>
-        <h3 class="text-xl font-semibold text-indigo-800 mb-2 flex items-center"><span class="material-icons mr-2">support_agent</span>Contact & Support</h3>
-        <ul class="list-disc ml-8 text-gray-700 space-y-1">
+        <h3 class="text-xl font-semibold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">support_agent</span>Contact & Support</h3>
+        <ul class="list-disc ml-8 text-gray-300 space-y-1">
           <li>Report an issue</li>
           <li>Contact head of studies</li>
           <li>Request help via chat/email</li>
@@ -395,10 +523,10 @@
         <span class="material-icons text-3xl animate-pulse">smart_toy</span>
         <span id="ai-float-expand" class="material-icons text-xl ml-1">expand_less</span>
     </button>
-    <div id="ai-chat-drawer" class="hidden fixed bottom-24 right-8 w-80 bg-white rounded-2xl shadow-2xl border border-blue-200 z-50 flex flex-col">
+    <div id="ai-chat-drawer" class="hidden fixed bottom-24 right-8 w-80 glassmorphic z-50 flex flex-col">
         <div class="flex items-center justify-between p-4 border-b border-blue-100 bg-blue-50 rounded-t-2xl">
-            <span class="font-bold text-blue-700 flex items-center"><span class="material-icons mr-2">smart_toy</span>Ask Peter (AI)</span>
-            <button id="ai-chat-close" class="text-blue-700 text-2xl focus:outline-none"><span class="material-icons">close</span></button>
+            <span class="font-bold text-blue-400 flex items-center"><span class="material-icons mr-2">smart_toy</span>Ask Peter (AI)</span>
+            <button id="ai-chat-close" class="text-blue-400 text-2xl focus:outline-none"><span class="material-icons">close</span></button>
         </div>
         <div id="ai-chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50" style="min-height: 180px;"></div>
         <div class="p-4 border-t border-blue-100 bg-blue-50 rounded-b-2xl">

@@ -12,7 +12,7 @@ let currentSubmission = null;
 
 async function fetchSubmissions() {
   try {
-    const response = await fetch('/quizRoutes/submissions');
+    const response = await fetch('http://localhost:3000/quizRoutes/submissions');
     const data = await response.json();
     submissions = data;
     displayQuizzesNeedingGrading();
@@ -83,7 +83,7 @@ submitGradingBtn.addEventListener('click', async () => {
   });
 
   try {
-    const response = await fetch('/quizRoutes/submit-grades', {
+    const response = await fetch('http://localhost:3000/quizRoutes/submit-grades', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

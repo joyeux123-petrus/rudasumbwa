@@ -11,7 +11,7 @@ const openEndedTemplate = document.getElementById('open-ended-template');
 
 async function fetchQuizzes() {
   try {
-    const response = await fetch('/api/quizzes');
+    const response = await fetch('http://localhost:3000/api/quizzes');
     const quizzes = await response.json();
     displayQuizzes(quizzes);
   } catch (error) {
@@ -106,7 +106,7 @@ submitBtn.addEventListener('click', async () => {
   };
 
   try {
-    const response = await fetch('/api/quizzes/submit-quiz', {
+    const response = await fetch('http://localhost:3000/api/quizzes/submit-quiz', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(submissionData)

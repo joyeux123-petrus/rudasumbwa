@@ -18,8 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
         headers: { 'Authorization': 'Bearer ' + getToken() }
       });
       if (!res.ok) throw new Error('Failed to fetch users');
-      const users = await res.json();
+      let data = await res.json();
+      let users = data.users || [];
       console.log('Fetched users:', users);
+      if (!Array.isArray(users)) users = [];
       if (users.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="7">No pending users.</td></tr>';
         return;
@@ -29,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${user.username}</td>
-          <td>${user.role.charAt(0).toUpperCase() + user.role.slice(1)}</td>
+          <td>${user.role ? (user.role.charAt(0).toUpperCase() + user.role.slice(1)) : 'Unknown'}</td>
           <td>${user.email}</td>
           <td>${user.className || '-'}</td>
           <td>${user.parish || '-'}</td>

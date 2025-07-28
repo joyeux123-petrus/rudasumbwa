@@ -1,7 +1,7 @@
 // Fetch clubs for dropdown
 async function loadClubs() {
   try {
-    const res = await fetch('/api/clubs', {
+    const res = await fetch('http://localhost:3000/api/clubs', {
       headers: {
         'Authorization': 'Bearer ' + (localStorage.getItem('adminToken') || '')
       }
@@ -30,7 +30,7 @@ userNameInput.addEventListener('input', async function() {
   userIdInput.value = '';
   if (query.length < 2) return;
   try {
-    const res = await fetch(`/api/users?search=${encodeURIComponent(query)}`, {
+    const res = await fetch(`http://localhost:3000/api/users?search=${encodeURIComponent(query)}`, {
       headers: {
         'Authorization': 'Bearer ' + (localStorage.getItem('adminToken') || '')
       }
@@ -74,7 +74,7 @@ form.addEventListener('submit', async (e) => {
     return;
   }
   try {
-    const res = await fetch('/api/club-membership/set-admin', {
+    const res = await fetch('http://localhost:3000/api/club-membership/set-admin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

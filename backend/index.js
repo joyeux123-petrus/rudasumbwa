@@ -14,6 +14,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const fetch = require('node-fetch'); // Gemini API integration
 
 dotenv.config();
 
@@ -60,7 +61,11 @@ function authenticateToken(req, res, next) {
  * Stores user in-memory and returns JWT token
  */
 app.post('/signup', (req, res) => {
-  const { username, password } = req.body;
+  let { username, password, email, className, parish, district, subject, role } = req.body;
+  className = className || req.body.class || '';
+  district = district || '';
+  subject = subject || '';
+  role = role || 'pending';
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password required' });
   }
@@ -70,8 +75,15 @@ app.post('/signup', (req, res) => {
   users[username] = {
     username,
     password, // In production, hash this!
+    email: email || '',
+    className: className || '',
+    parish: parish || '',
     createdAt: new Date().toISOString(),
-    status: 'Active'
+    status: 'Pending',
+    isApproved: false,
+    role,
+    district,
+    subject
   };
   const token = generateToken(username);
   res.status(201).json({ message: 'User created', token });
@@ -83,7 +95,11 @@ app.post('/signup', (req, res) => {
  * Stores user in-memory and returns JWT token
  */
 app.post('/api/auth/signup', (req, res) => {
-  const { username, password } = req.body;
+  let { username, password, email, className, parish, district, subject, role } = req.body;
+  className = className || req.body.class || '';
+  district = district || '';
+  subject = subject || '';
+  role = role || 'pending';
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password required' });
   }
@@ -93,8 +109,15 @@ app.post('/api/auth/signup', (req, res) => {
   users[username] = {
     username,
     password, // In production, hash this!
+    email: email || '',
+    className: className || '',
+    parish: parish || '',
     createdAt: new Date().toISOString(),
-    status: 'Active'
+    status: 'Pending',
+    isApproved: false,
+    role,
+    district,
+    subject
   };
   const token = generateToken(username);
   res.status(201).json({ message: 'User created', token });
@@ -128,7 +151,9 @@ app.get('/api/auth/users', (req, res) => {
   // Return all user details except password
   let userList = Object.values(users).map(({ password, ...user }) => user);
   // Optionally filter by status if provided
-  if (status) {
+  if (status === 'Pending') {
+    userList = userList.filter(user => user.isApproved === false);
+  } else if (status) {
     userList = userList.filter(user => user.status === status);
   }
   res.json({ users: userList });
@@ -148,6 +173,31 @@ app.get('/api/notifications', (req, res) => {
  */
 app.get('/protected', authenticateToken, (req, res) => {
   res.json({ message: `Hello, ${req.user.username}! This is a protected route.` });
+});
+
+// Gemini-powered Ask Peter endpoint
+const GEMINI_API_KEY = "AIzaSyAFqGaY6OlHznn4s_YSIfToqBo8uHpRBeA";
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + GEMINI_API_KEY;
+
+app.post('/api/ask-peter', async (req, res) => {
+  const { message } = req.body;
+  if (!message) {
+    return res.status(400).json({ text: "Please provide a message." });
+  }
+  try {
+    const geminiRes = await fetch(GEMINI_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: message }] }]
+      })
+    });
+    const geminiData = await geminiRes.json();
+    const aiText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't get a response from Gemini AI.";
+    res.json({ text: aiText });
+  } catch (err) {
+    res.json({ text: "Error connecting to Gemini AI." });
+  }
 });
 
 console.log("=== RUNNING UPDATED BACKEND WITH NOTIFICATIONS ENDPOINT ===");

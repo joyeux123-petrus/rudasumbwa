@@ -1,7 +1,7 @@
 // Fetch clubs from backend and render cards
 async function fetchClubs() {
   try {
-    const res = await fetch('/api/clubs');
+    const res = await fetch('http://localhost:3000/api/clubs');
     const clubs = await res.json();
     renderClubs(clubs);
   } catch (err) {
