@@ -586,5 +586,56 @@
     setInterval(updateTime, 1000);
     updateTime();
   </script>
+  <script>
+    // Fetch teacher data and update dashboard
+    document.addEventListener('DOMContentLoaded', async function() {
+      try {
+        // For demo: fetch the first teacher (in real use, fetch by logged-in teacher's ID)
+        const res = await fetch('/api/teachers', {
+          headers: {
+            'Content-Type': 'application/json'
+            // 'Authorization': 'Bearer ' + localStorage.getItem('token') // Uncomment if using JWT
+          }
+        });
+        const teachers = await res.json();
+        if (!teachers || !teachers.length) return;
+        const teacher = teachers[0]; // Demo: use first teacher
+        // Sidebar profile
+        const profileImg = document.querySelector('.sidebar-avatar');
+        if (profileImg && teacher.profile_picture) {
+          profileImg.src = teacher.profile_picture.startsWith('http') ? teacher.profile_picture : '/uploads/' + teacher.profile_picture;
+        }
+        const profileName = document.querySelector('.sidebar-profile-name');
+        if (profileName) profileName.textContent = teacher.full_name;
+        // Welcome section
+        const welcomeHeader = document.querySelector('#welcome h1');
+        if (welcomeHeader) welcomeHeader.innerHTML = `🌟 Welcome back, ${teacher.full_name}!`;
+        // Subject badges
+        const badges = document.querySelector('.subject-badges');
+        if (badges) {
+          badges.innerHTML = '';
+          if (teacher.subject) {
+            teacher.subject.split(',').forEach(subj => {
+              const span = document.createElement('span');
+              span.className = 'badge';
+              span.textContent = subj.trim();
+              badges.appendChild(span);
+            });
+          }
+          if (teacher.classes_assigned) {
+            teacher.classes_assigned.split(',').forEach(cls => {
+              const span = document.createElement('span');
+              span.className = 'badge';
+              span.textContent = cls.trim();
+              badges.appendChild(span);
+            });
+          }
+        }
+        // Optionally update summary cards, etc. here
+      } catch (e) {
+        console.error('Failed to load teacher data:', e);
+      }
+    });
+  </script>
   </body>
 </html>

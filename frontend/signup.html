@@ -149,7 +149,13 @@
           })
         });
           if(response.ok) {
-          messageDiv.innerHTML = '<span style="color:green">It will be reviewed by director of studies to confirm that you are student or teacher of Petit Seinire Sant Leon Kbgayi.</span>';
+          messageDiv.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <img src="images/logo.PNG" alt="School Logo" style="width:48px;height:48px;border-radius:50%;box-shadow:0 2px 8px #00f7ff44;">
+              <span style="font-weight:bold;color:#00f7ff;font-size:1.1em;letter-spacing:1px;">RUDASUMBWA</span>
+              <span style="color:green">It will be reviewed by director of studies to confirm that you are student or teacher of Petit Séminaire Saint Léon Kabgayi.</span>
+              <a href="login.html" class="btn btn-primary" style="margin-top:14px;min-width:120px;">Sign In</a>
+            </div>`;
           document.getElementById('signup-form').reset();
           toggleRoleFields();
         } else if (response.status === 409) {

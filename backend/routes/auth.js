@@ -172,4 +172,68 @@ router.get('/users', async (req, res) => {
   }
 });
 
+// --- Password Reset Endpoints ---
+const crypto = require('crypto');
+
+// Request password reset
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: 'Email is required' });
+  try {
+    // Find user by email
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      // Respond with success even if user not found (to prevent email enumeration)
+      return res.json({ message: 'If this email exists, a reset code has been sent.' });
+    }
+    // Generate reset code
+    const resetCode = crypto.randomBytes(3).toString('hex').toUpperCase(); // 6-char code
+    const expires = new Date(Date.now() + 1000 * 60 * 15); // 15 minutes from now
+    user.resetPasswordToken = resetCode;
+    user.resetPasswordExpires = expires;
+    await user.save();
+    // Send email
+    await sendEmail(
+      user.email,
+      'Password Reset Code',
+      `Your password reset code is: ${resetCode}\nThis code will expire in 15 minutes.`,
+      `<p>Your password reset code is: <b>${resetCode}</b></p><p>This code will expire in 15 minutes.</p>`
+    );
+    res.json({ message: 'If this email exists, a reset code has been sent.' });
+  } catch (err) {
+    console.error('Forgot password error:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Reset password
+router.post('/reset-password', async (req, res) => {
+  const { email, code, newPassword } = req.body;
+  if (!email || !code || !newPassword) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user || !user.resetPasswordToken || !user.resetPasswordExpires) {
+      return res.status(400).json({ message: 'Invalid or expired reset code' });
+    }
+    if (
+      user.resetPasswordToken !== code ||
+      new Date(user.resetPasswordExpires) < new Date()
+    ) {
+      return res.status(400).json({ message: 'Invalid or expired reset code' });
+    }
+    // Update password
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    user.passwordHash = passwordHash;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+    res.json({ message: 'Password has been reset successfully.' });
+  } catch (err) {
+    console.error('Reset password error:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 module.exports = router;

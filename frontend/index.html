@@ -359,28 +359,34 @@
   <script src="js/particles.js"></script>
   <script src="js/main.js"></script>
   <script src="js/data.js"></script>
-    <script>
-    (function() {
-      const videoElement = document.getElementById('hero-video');
-      const videoSources = [
-        'images/0.mp4',
-        'images/1.mp4',
-        'images/2.mp4',
-        'images/3.mp4',
-        'images/4.mp4'
-      ];
-      let currentIndex = 0;
-
-      function playNextVideo() {
-        videoElement.src = videoSources[currentIndex];
-        videoElement.load();
-        videoElement.play();
-        currentIndex = (currentIndex + 1) % videoSources.length;
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      const videos = document.querySelectorAll('.hero-video-container video');
+      let current = 0;
+      videos.forEach((video, idx) => {
+        video.muted = true;
+        video.style.display = idx === 0 ? 'block' : 'none';
+        video.style.position = 'absolute';
+        video.style.top = 0;
+        video.style.left = 0;
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
+        video.style.zIndex = 1;
+      });
+      if (videos.length > 0) {
+        videos[0].play().catch(function(){});
+        videos.forEach((video, idx) => {
+          video.onended = function() {
+            video.style.display = 'none';
+            current = (idx + 1) % videos.length;
+            videos[current].style.display = 'block';
+            videos[current].currentTime = 0;
+            videos[current].play().catch(function(){});
+          };
+        });
       }
-
-      videoElement.addEventListener('ended', playNextVideo);
-      playNextVideo();
-    })();
+    });
   </script>
 </body>
 </html>

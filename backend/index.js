@@ -167,6 +167,76 @@ app.get('/api/notifications', (req, res) => {
   res.json({ notifications: [] });
 });
 
+// Email sender
+const { sendEmail } = require('./utils/email');
+
+// Approve user endpoint
+app.post('/api/auth/approve-user', async (req, res) => {
+  const { email } = req.body;
+  const user = Object.values(users).find(u => u.email === email);
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'User not found' });
+  }
+  user.isApproved = true;
+  user.status = 'Active';
+
+  // Styled HTML email for approval
+  const html = `
+    <div style="max-width:500px;margin:0 auto;background:#f7fafc;border-radius:12px;padding:32px 24px;font-family:sans-serif;box-shadow:0 4px 24px #0002;">
+      <img src="https://i.imgur.com/6QK6wQp.png" alt="School Logo" style="width:80px;display:block;margin:0 auto 10px auto;border-radius:50%;box-shadow:0 2px 8px #00f7ff44;">
+      <div style="text-align:center;font-weight:bold;color:#00bcd4;font-size:1.2em;letter-spacing:1px;margin-bottom:10px;">RUDASUMBWA</div>
+      <h2 style="color:#0077b6;text-align:center;margin-bottom:12px;">Welcome to Petit Séminaire Saint Léon Kabgayi!</h2>
+      <p style="font-size:1.1rem;color:#222;text-align:center;">Dear <b>${user.username}</b>,<br><br>
+      Congratulations! Your account has been <span style='color:#16a34a;font-weight:bold;'>approved</span> as a ${user.role} at Petit Séminaire Saint Léon Kabgayi.<br><br>
+      You can now access your dashboard and start using our platform.</p>
+      <div style="text-align:center;margin:32px 0;">
+        <a href="http://localhost:3000/frontend/login.html" style="background:#0077b6;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-size:1.1rem;font-weight:bold;box-shadow:0 2px 8px #0077b633;">Sign In</a>
+      </div>
+      <p style="color:#555;text-align:center;">If you have any questions, please contact the school administration.<br><br>Best regards,<br><b>Petit Séminaire Saint Léon Kabgayi</b></p>
+    </div>
+  `;
+  try {
+    await sendEmail(user.email, 'Account Approved - Petit Séminaire Saint Léon Kabgayi',
+      `Congratulations! Your account has been approved as a ${user.role}.`, html);
+  } catch (e) {
+    return res.status(500).json({ success: false, message: 'User approved, but failed to send email.' });
+  }
+  res.json({ success: true, message: 'User approved and email sent.' });
+});
+
+// Reject user endpoint
+app.post('/api/auth/reject-user', async (req, res) => {
+  const { email } = req.body;
+  const username = Object.keys(users).find(k => users[k].email === email);
+  const user = users[username];
+  if (!username || !user) {
+    return res.status(404).json({ success: false, message: 'User not found' });
+  }
+  // Styled HTML email for rejection
+  const html = `
+    <div style="max-width:500px;margin:0 auto;background:#fff0f0;border-radius:12px;padding:32px 24px;font-family:sans-serif;box-shadow:0 4px 24px #0002;">
+      <img src="https://i.imgur.com/6QK6wQp.png" alt="School Logo" style="width:80px;display:block;margin:0 auto 10px auto;border-radius:50%;box-shadow:0 2px 8px #00f7ff44;">
+      <div style="text-align:center;font-weight:bold;color:#00bcd4;font-size:1.2em;letter-spacing:1px;margin-bottom:10px;">RUDASUMBWA</div>
+      <h2 style="color:#d90429;text-align:center;margin-bottom:12px;">Account Not Approved</h2>
+      <p style="font-size:1.1rem;color:#222;text-align:center;">Dear <b>${user.username}</b>,<br><br>
+      We regret to inform you that your account could not be approved as a student/teacher of Petit Séminaire Saint Léon Kabgayi.<br><br>
+      If you believe this is a mistake, please contact the school administration for clarification.</p>
+      <div style="text-align:center;margin:32px 0;">
+        <a href="mailto:info@psslk.rw" style="background:#d90429;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-size:1.1rem;font-weight:bold;box-shadow:0 2px 8px #d9042933;">Contact School</a>
+      </div>
+      <p style="color:#555;text-align:center;">Thank you for your interest.<br><br>Best regards,<br><b>Petit Séminaire Saint Léon Kabgayi</b></p>
+    </div>
+  `;
+  try {
+    await sendEmail(user.email, 'Account Not Approved - Petit Séminaire Saint Léon Kabgayi',
+      `We regret to inform you that your account could not be approved.`, html);
+  } catch (e) {
+    return res.status(500).json({ success: false, message: 'User rejected, but failed to send email.' });
+  }
+  delete users[username];
+  res.json({ success: true, message: 'User rejected and email sent.' });
+});
+
 /**
  * Protected sample route
  * Requires valid JWT token
@@ -198,6 +268,12 @@ app.post('/api/ask-peter', async (req, res) => {
   } catch (err) {
     res.json({ text: "Error connecting to Gemini AI." });
   }
+});
+
+// Global error handler to always return JSON
+app.use((err, req, res, next) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({ success: false, message: err.message || 'Internal server error' });
 });
 
 console.log("=== RUNNING UPDATED BACKEND WITH NOTIFICATIONS ENDPOINT ===");
