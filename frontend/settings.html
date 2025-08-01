@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+  <link rel="stylesheet" href="student-style.css">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #232946 0%, #181c2b 100%);
+      min-height: 100vh;
+      font-family: 'Inter', 'Montserrat', sans-serif;
+      color: #e0e6f7;
+    }
+    .container {
+      max-width: 520px;
+      margin: 2.5rem auto;
+      background: rgba(36, 40, 56, 0.85);
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+      padding: 2.5rem 2rem 2rem 2rem;
+      backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(255,255,255,0.10);
+      position: relative;
+    }
+    .settings-tabs {
+      display: flex;
+      gap: 1.2rem;
+      margin-bottom: 2.2rem;
+      justify-content: center;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: #e0e6f7;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 0.7rem 1.7rem;
+      border-radius: 2rem 2rem 0 0;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    .tab-btn.active {
+      background: linear-gradient(90deg, #4f8cff 60%, #38e7b0 100%);
+      color: #fff;
+      border-bottom: 3px solid #ffd700;
+      box-shadow: 0 2px 12px #38e7b033;
+    }
+    .tab-content {
+      animation: fadeIn 0.5s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .profile-form label {
+      display: block;
+      margin-bottom: 1.1rem;
+      font-weight: 500;
+      color: #ffd700;
+    }
+    .profile-form input {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 0.7rem;
+      border: 1.5px solid #4f8cff;
+      background: rgba(255,255,255,0.08);
+      color: #e0e6f7;
+      font-size: 1rem;
+      margin-top: 0.3rem;
+      margin-bottom: 0.2rem;
+      transition: border 0.2s;
+    }
+    .profile-form input:focus {
+      border: 1.5px solid #ffd700;
+      outline: none;
+      background: rgba(80, 100, 255, 0.10);
+    }
+    .profile-form button {
+      background: linear-gradient(90deg, #4f8cff 60%, #38e7b0 100%);
+      color: #fff;
+      border: none;
+      border-radius: 2rem;
+      padding: 0.8rem 2.2rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      box-shadow: 0 2px 12px #38e7b033;
+      cursor: pointer;
+      margin-top: 0.7rem;
+      transition: background 0.2s;
+    }
+    .profile-form button:hover {
+      background: linear-gradient(90deg, #38e7b0 60%, #4f8cff 100%);
+    }
+    .tab-content {
+      margin-top: 1.5rem;
+    }
+    .settings-tabs .fa-user, .settings-tabs .fa-lock, .settings-tabs .fa-shield-alt {
+      margin-right: 0.7rem;
+    }
+    .tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tab-content h3 {
+      color: #ffd700;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 1.2rem 0.5rem; }
+      .settings-tabs { flex-direction: column; gap: 0.5rem; }
+      .tab-btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <img src="images/logo.PNG" alt="School Logo" class="nav-logo" />
+        <div class="brand-text"><span>RUDASUMBWA</span></div>
+      </div>
+      <div class="nav-menu">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="clubs.html">Clubs</a>
+        <a class="nav-link" href="notes.html">Notes</a>
+        <a class="nav-link" href="settings.html">Settings</a>
+        <button id="logout-btn" class="btn-signin" style="margin-left:16px;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </div>
+  </nav>
+  <section class="container">
+    <h2>Account Settings</h2>
+    <div class="settings-tabs">
+      <button class="tab-btn active" data-tab="profile"><i class="fa fa-user"></i> Profile</button>
+      <button class="tab-btn" data-tab="password"><i class="fa fa-lock"></i> Password</button>
+      <button class="tab-btn" data-tab="admin" id="adminTabBtn" style="display:none;"><i class="fa fa-shield-alt"></i> Admin</button>
+    </div>
+    <div class="tab-content" id="profile-tab">
+      <form id="settings-profile-form" class="profile-form" enctype="multipart/form-data">
+        <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;flex-wrap:wrap;justify-content:center;">
+          <div style="text-align:center;">
+            <img id="profile-pic-preview" src="images/profile-placeholder.png" alt="Profile Picture" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #ffd700;box-shadow:0 2px 12px #38e7b033;">
+            <br>
+            <label for="profile-pic-upload" style="display:inline-block;margin-top:0.7rem;cursor:pointer;background:#4f8cff;color:#fff;padding:0.5rem 1.2rem;border-radius:1.2rem;font-size:0.98rem;font-weight:600;transition:background 0.2s;">
+              <i class="fa fa-upload"></i> Upload Picture
+              <input type="file" id="profile-pic-upload" name="profilePic" accept="image/*" style="display:none;">
+            </label>
+          </div>
+          <div style="flex:1;min-width:220px;">
+            <label>Full Name
+              <input type="text" name="username" required>
+            </label>
+            <label>Email
+              <input type="email" name="email" required>
+            </label>
+            <label>Class
+              <input type="text" name="className">
+            </label>
+            <label>Parish
+              <input type="text" name="parish">
+            </label>
+            <label>District
+              <input type="text" name="district">
+            </label>
+            <button type="submit">Update Profile</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="tab-content" id="password-tab" style="display:none;">
+      <form id="settings-password-form" class="profile-form">
+        <label>Current Password
+          <input type="password" name="currentPassword" required>
+        </label>
+        <label>New Password
+          <input type="password" name="newPassword" required>
+        </label>
+        <label>Confirm New Password
+          <input type="password" name="confirmPassword" required>
+        </label>
+        <button type="submit">Change Password</button>
+      </form>
+    </div>
+    <div class="tab-content" id="admin-tab" style="display:none;">
+      <h3>Admin Settings</h3>
+      <p>Manage users, roles, and security here. (Add your admin controls as needed.)</p>
+    </div>
+  </section>
+  <script src="settings.js"></script>
+  <script src="auth-utils.js"></script>
+</body>
+</html>
