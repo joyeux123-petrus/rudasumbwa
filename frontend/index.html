@@ -141,27 +141,7 @@
     <h2 class="section-title">📅 Upcoming Spiritual Events</h2>
     <p class="section-subtitle">Stay connected with our spiritual journey</p>
     <div class="events-grid" id="events-grid">
-      <div class="event-card">
-        <div class="event-date"><h3>10 Jun</h3><span>Retreat</span></div>
-        <div class="event-info">
-          <h4>Retreat</h4>
-          <p>Starts in 2 days</p>
-        </div>
-      </div>
-      <div class="event-card">
-        <div class="event-date"><h3>15 Jun</h3><span>Mass</span></div>
-        <div class="event-info">
-          <h4>Mass Service</h4>
-          <p>Special mass for students</p>
-        </div>
-      </div>
-      <div class="event-card">
-        <div class="event-date"><h3>20 Jun</h3><span>Talk</span></div>
-        <div class="event-info">
-          <h4>Spiritual Talk</h4>
-          <p>Guest speaker: Fr. Jean</p>
-        </div>
-      </div>
+      <!-- Events will be loaded dynamically -->
     </div>
   </section>
 
@@ -359,6 +339,34 @@
   <script src="js/particles.js"></script>
   <script src="js/main.js"></script>
   <script src="js/data.js"></script>
+  <script src="js/leaderboard.js"></script>
+<script>
+// Dynamic Spiritual Events Loader
+document.addEventListener('DOMContentLoaded', function() {
+  const eventsGrid = document.getElementById('events-grid');
+  if (!eventsGrid) return;
+  fetch('/api/events')
+    .then(res => res.json())
+    .then(events => {
+      if (!Array.isArray(events) || events.length === 0) {
+        eventsGrid.innerHTML = '<div style="color:#888;">No upcoming events.</div>';
+        return;
+      }
+      eventsGrid.innerHTML = events.map(ev => `
+        <div class="event-card">
+          <div class="event-date"><h3>${ev.date}</h3><span>${ev.type}</span></div>
+          <div class="event-info">
+            <h4>${ev.title}</h4>
+            <p>${ev.description}</p>
+          </div>
+        </div>
+      `).join('');
+    })
+    .catch(() => {
+      eventsGrid.innerHTML = '<div style="color:#e53e3e;">Failed to load events.</div>';
+    });
+});
+</script>
   <script>
     window.addEventListener('DOMContentLoaded', function() {
       const videos = document.querySelectorAll('.hero-video-container video');

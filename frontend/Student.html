@@ -138,7 +138,7 @@
                     <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="grades"><span class="material-icons text-3xl">grading</span><span class="hidden md:inline">Grades</span></a>
                     <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="gospel"><span class="material-icons text-3xl">auto_stories</span><span class="hidden md:inline">Gospel</span></a>
                     <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="schedule"><span class="material-icons text-3xl">calendar_today</span><span class="hidden md:inline">Schedule</span></a>
-                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="announcements"><span class="material-icons text-3xl">campaign</span><span class="hidden md:inline">Announcements</span></a>
+                    <a href="#" id="open-student-announcement-modal" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="announcements"><span class="material-icons text-3xl">campaign</span><span class="hidden md:inline">Announcements</span></a>
                     <a href="club.html" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="clubs"><span class="material-icons text-3xl">groups</span><span class="hidden md:inline">Clubs</span></a>
                     <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="ai"><span class="material-icons text-3xl">smart_toy</span><span class="hidden md:inline">Ask Peter</span></a>
                     <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="pending"><span class="material-icons text-3xl">pending_actions</span><span class="hidden md:inline">Pending</span></a>
@@ -456,7 +456,10 @@
                 <section id="pending" class="dashboard-section hidden glassmorphic"> ... </section>
                 <section id="feedback" class="dashboard-section hidden glassmorphic"> ... </section>
                 <section id="download" class="dashboard-section hidden glassmorphic"> ... </section>
-                <section id="spiritual" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="spiritual" class="dashboard-section hidden glassmorphic">
+                  <h2 class="text-2xl font-bold text-yellow-400 mb-6 flex items-center"><span class="material-icons mr-2">spa</span>Spiritual Events</h2>
+                  <div class="events-grid" id="student-events-grid"></div>
+                </section>
                 <section id="comments" class="dashboard-section hidden glassmorphic"> ... </section>
                 <section id="settings" class="dashboard-section hidden glassmorphic">
   <div class="max-w-3xl mx-auto glassmorphic p-8 border border-gray-200">
@@ -540,7 +543,45 @@
     <script src="js/sidebar.js"></script>
     <script src="js/ai-chat.js"></script>
     <script src="js/leaderboard-modal.js"></script>
+    <script>
+    // Dynamic Spiritual Events Loader for Student Dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+      const eventsGrid = document.getElementById('student-events-grid');
+      if (!eventsGrid) return;
+      fetch('/api/events')
+        .then(res => res.json())
+        .then(events => {
+          if (!Array.isArray(events) || events.length === 0) {
+            eventsGrid.innerHTML = '<div style="color:#888;">No upcoming events.</div>';
+            return;
+          }
+          eventsGrid.innerHTML = events.map(ev => `
+            <div class="event-card glassmorphic p-4 mb-4 rounded-xl shadow border border-blue-400">
+              <div class="flex items-center gap-4 mb-2">
+                <div class="event-date bg-blue-900 text-yellow-400 px-4 py-2 rounded-lg text-lg font-bold flex flex-col items-center justify-center"><span>${ev.date}</span><span class="text-xs text-blue-200">${ev.type}</span></div>
+                <div class="event-info">
+                  <h4 class="text-xl font-bold text-yellow-400 mb-1">${ev.title}</h4>
+                  <p class="text-gray-200">${ev.description}</p>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        })
+        .catch(() => {
+          eventsGrid.innerHTML = '<div style="color:#e53e3e;">Failed to load events.</div>';
+        });
+    });
+    </script>
     <script src="js/clubs-showcase.js"></script>
+    <!-- Announcement Modal for Students -->
+    <div id="student-announcement-modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100vw; height:100vh; background:rgba(30,34,90,0.45); backdrop-filter:blur(2px); align-items:center; justify-content:center;">
+      <div style="background:#232946; color:#fff; border-radius:1.2rem; box-shadow:0 8px 32px rgba(79,140,255,0.18); padding:2.5rem 2.5rem 2rem 2.5rem; max-width:420px; width:95vw; position:relative;">
+        <button id="close-student-announcement-modal" style="position:absolute; top:1.2rem; right:1.2rem; background:none; border:none; font-size:1.5rem; color:#4f8cff; cursor:pointer;">&times;</button>
+        <h2 style="margin-bottom:1.2rem; color:#ffd700; font-weight:700;">Latest Announcement</h2>
+        <div id="student-announcement-content" style="font-size:1.1rem; min-height:60px; margin-bottom:1rem;"></div>
+        <div id="student-announcement-time" style="font-size:0.95rem; color:#a1a1aa;"></div>
+      </div>
+    </div>
     <script>
     // Tab switching with GSAP animation (Learning Center only)
     document.addEventListener('DOMContentLoaded', function() {
@@ -572,6 +613,34 @@
                     }
                 });
             });
+        });
+        // Announcement Modal Logic for Students
+        const openAnnouncementBtn = document.getElementById('open-student-announcement-modal');
+        const announcementModal = document.getElementById('student-announcement-modal');
+        const closeAnnouncementBtn = document.getElementById('close-student-announcement-modal');
+        const announcementContent = document.getElementById('student-announcement-content');
+        const announcementTime = document.getElementById('student-announcement-time');
+        openAnnouncementBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          // Fetch latest announcement from backend
+          fetch('/api/announcements/latest?audience=students')
+            .then(res => {
+              if (!res.ok) throw new Error('No announcement');
+              return res.json();
+            })
+            .then(ann => {
+              announcementContent.textContent = ann.message;
+              const date = new Date(ann.timestamp);
+              announcementTime.textContent = 'Sent: ' + date.toLocaleString();
+            })
+            .catch(() => {
+              announcementContent.textContent = 'No new announcements for students.';
+              announcementTime.textContent = '';
+            });
+          announcementModal.style.display = 'flex';
+        });
+        closeAnnouncementBtn.addEventListener('click', function() {
+          announcementModal.style.display = 'none';
         });
     });
     </script>

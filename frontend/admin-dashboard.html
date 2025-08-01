@@ -23,11 +23,11 @@
 <li class="active"><a href="#" class="admin-menu-link" data-section="dashboard-home"><span class="icon">🏠</span> Dashboard Home</a></li>
 <li><a href="#" class="admin-menu-link" data-section="user-management"><span class="icon">👥</span> User Management</a></li>
 <li><a href="#" class="admin-menu-link" data-section="notes-lectiones"><span class="icon">📚</span> Notes & LECTIONES</a></li>
-<li><a href="#" class="admin-menu-link" data-section="leaderboard"><span class="icon">🏆</span> Leaderboard</a></li>
+<!-- Leaderboard button removed from sidebar navigation -->
 <li><a href="#" class="admin-menu-link" data-section="quizzes-exams"><span class="icon">🧪</span> Quizzes & Exams</a></li>
-<li><a href="#" class="admin-menu-link" data-section="announcements"><span class="icon">📢</span> Announcements</a></li>
-<li><a href="#" class="admin-menu-link" data-section="gospel-of-the-day"><span class="icon">🕊️</span> Gospel of the Day</a></li>
-<li><a href="#" class="admin-menu-link" data-section="spiritual-events"><span class="icon">🌿</span> Spiritual Events</a></li>
+<li><a href="#" class="admin-menu-link" data-section="announcements" id="open-announcement-modal"><span class="icon">📢</span> Announcements</a></li>
+<!-- <li><a href="#" class="admin-menu-link" data-section="gospel-of-the-day"><span class="icon">🕊️</span> Gospel of the Day</a></li> -->
+<!-- <li><a href="#" class="admin-menu-link" data-section="spiritual-events"><span class="icon">🌿</span> Spiritual Events</a></li> -->
 <li><a href="#" class="admin-menu-link" data-section="clubs-manager"><span class="icon">🏫</span> Clubs Manager</a></li>
 <li><a href="#" class="admin-menu-link" data-section="files-uploads"><span class="icon">🗃️</span> Files & Uploads</a></li>
 <li><a href="#" class="admin-menu-link" data-section="settings"><span class="icon">⚙️</span> Settings</a></li>
@@ -54,18 +54,37 @@
 </div>
 </header>
 
-<!-- Analytics Cards -->
+
+<!-- Analytics Cards + Spiritual Events Quick Access -->
 <section class="analytics-cards">
-<div class="card glass"><span class="icon">👥</span><div>Total Users<br><b>1,234</b></div></div>
-<div class="card glass"><span class="icon">⏳</span><div>Pending Requests<br><b>12</b></div></div>
-<div class="card glass"><span class="icon">📚</span><div>Notes Uploaded<br><b>87</b></div></div>
-<div class="card glass"><span class="icon">🧪</span><div>Quizzes Active<br><b>5</b></div></div>
-<div class="card glass"><span class="icon">🏆</span><div>Top Student<br><b>Jane Doe</b></div></div>
-<div class="card glass"><span class="icon">🕊️</span><div>Gospel Views<br><b>321</b></div></div>
+  <div class="card glass"><span class="icon">👥</span><div>Total Users<br><b>1,234</b></div></div>
+  <div class="card glass"><span class="icon">⏳</span><div>Pending Requests<br><b>12</b></div></div>
+  <div class="card glass"><span class="icon">📚</span><div>Notes Uploaded<br><b>87</b></div></div>
+  <div class="card glass"><span class="icon">🧪</span><div>Quizzes Active<br><b>5</b></div></div>
+  <div class="card glass"><span class="icon">🏆</span><div>Top Student<br><b>Jane Doe</b></div></div>
+  <div class="card glass"><span class="icon">🕊️</span><div>Gospel Views<br><b>321</b></div></div>
+  <!-- Spiritual Events Quick Button -->
+  <button id="quick-spiritual-events-btn" class="btn" style="margin-top:1.2rem;background:linear-gradient(90deg,#38e7b0,#4f8cff);color:#fff;border:none;border-radius:1.2rem;padding:0.8rem 2.2rem;font-size:1.1rem;font-weight:700;box-shadow:0 2px 12px #38e7b033;transition:background 0.2s;cursor:pointer;display:block;width:100%;max-width:340px;margin-left:auto;margin-right:auto;">
+    <span class="icon" style="font-size:1.3em;vertical-align:middle;">🌿</span> Manage Spiritual Events
+  </button>
 </section>
 
 <!-- Main Dashboard Sections -->
 <section class="dashboard-sections">
+<!-- Spiritual Events Management -->
+<div class="dashboard-module glass" id="spiritual-events-module" style="display:none;">
+  <h2><span class="icon">🌿</span> Spiritual Events Management</h2>
+  <form id="spiritual-event-form" style="margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;">
+    <input type="text" id="event-date" placeholder="Date (e.g. 10 Jun)" required style="flex:1; min-width:100px;">
+    <input type="text" id="event-type" placeholder="Type (e.g. Mass)" required style="flex:1; min-width:100px;">
+    <input type="text" id="event-title" placeholder="Title" required style="flex:1; min-width:100px;">
+    <input type="text" id="event-description" placeholder="Description" required style="flex:2; min-width:180px;">
+    <button type="submit" class="btn" style="background:#4f8cff; color:#fff; border:none; border-radius:1.2rem; padding:0.6rem 1.5rem; font-weight:700;">Add Event</button>
+  </form>
+  <div id="spiritual-events-list"></div>
+  <button id="save-events-btn" class="btn" style="margin-top:1.2rem; background:#38e7b0; color:#fff; border:none; border-radius:1.2rem; padding:0.6rem 2rem; font-weight:700;">Save All Events</button>
+  <div id="events-save-status" style="margin-top:0.7rem; font-weight:600;"></div>
+</div>
 <!-- User Management -->
 <div class="dashboard-module glass" id="user-management-module" style="display:block;">
 <h2><span class="icon">👥</span> User Management</h2>
@@ -79,6 +98,42 @@
 </table>
 </div>
 </div>
+
+<!-- Change Leaderboard Button (moved below User Management) -->
+<div style="text-align:center; margin: 18px 0 18px 0;">
+  <button id="change-leaderboard-btn"
+    class="btn edit-btn" 
+    style="padding:6px 18px; border-radius:18px; font-size:0.98rem; font-weight:600; transition:background 0.2s, box-shadow 0.2s; box-shadow:0 2px 8px rgba(59,130,246,0.08); outline:none; border:1.5px solid #3b82f6; background:#fff; color:#3b82f6; cursor:pointer;"
+    onmouseover="this.style.background='#3b82f6';this.style.color='#fff';" 
+    onmouseout="this.style.background='#fff';this.style.color='#3b82f6';"
+  >Change Leaderboard</button>
+  <div style="margin-top:7px; color:#6b7280; font-size:0.97rem;">Edit the leaderboard to update student rankings.</div>
+  <div id="leaderboard-error-msg" style="margin-top:7px; color:#ef4444; font-size:0.97rem; display:none;"></div>
+</div>
+<script>
+// Error-handling for Change Leaderboard button
+const changeBtn = document.getElementById('change-leaderboard-btn');
+const errorMsg = document.getElementById('leaderboard-error-msg');
+if (changeBtn) {
+  changeBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    // Try to fetch leaderboard.html to check if it loads
+    fetch('leaderboard.html', { method: 'HEAD' })
+      .then(resp => {
+        if (resp.ok) {
+          window.location.href = 'leaderboard.html';
+        } else {
+          errorMsg.textContent = 'Error: Could not load leaderboard editor.';
+          errorMsg.style.display = 'block';
+        }
+      })
+      .catch(() => {
+        errorMsg.textContent = 'Error: Could not load leaderboard editor.';
+        errorMsg.style.display = 'block';
+      });
+  });
+}
+</script>
 
 <!-- Content Management -->
 <div class="dashboard-module glass">
@@ -133,6 +188,7 @@
 <!-- Leaderboard Control -->
 <div class="dashboard-module glass">
 <h2><span class="icon">🏆</span> Leaderboard Control</h2>
+<button onclick="window.location.href='leaderboard.html'" class="btn edit-btn" style="margin: 16px 0; display: block; width: 100%; font-size: 1.1rem;">Change Leaderboard</button>
 <div class="leaderboard-list">
 <div class="leaderboard-card glass">Top Student: Jane Doe (S5) - 98%</div>
 <div class="leaderboard-card glass">Top Class: S4 - 92%</div>
@@ -266,10 +322,224 @@
 </div>
 </div>
 </section>
+<!-- Leaderboard Section (hidden by default) -->
+<div id="leaderboard-section" style="display:none;"></div>
 </main>
 </div>
+<!-- Announcement Modal -->
+<div id="announcement-modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100vw; height:100vh; background:rgba(30,34,90,0.45); backdrop-filter:blur(2px); align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:1.2rem; box-shadow:0 8px 32px rgba(79,140,255,0.18); padding:2.5rem 2.5rem 2rem 2.5rem; max-width:420px; width:95vw; position:relative;">
+    <button id="close-announcement-modal" style="position:absolute; top:1.2rem; right:1.2rem; background:none; border:none; font-size:1.5rem; color:#4f8cff; cursor:pointer;">&times;</button>
+    <h2 style="margin-bottom:1.2rem; color:#4f8cff; font-weight:700;">Create Announcement</h2>
+    <form id="announcement-form" style="display:flex; flex-direction:column; gap:1.2rem;">
+      <textarea id="announcement-message" rows="4" placeholder="Type your announcement here..." required style="resize:none; border-radius:0.7rem; border:1px solid #dbeafe; padding:1rem; font-size:1rem; font-family:inherit;"></textarea>
+      <div style="display:flex; gap:1.2rem; align-items:center;">
+        <label style="font-weight:600; color:#4f8cff;">Audience:</label>
+        <label><input type="radio" name="audience" value="students" required> Students</label>
+        <label><input type="radio" name="audience" value="teachers"> Teachers</label>
+        <label><input type="radio" name="audience" value="all"> All</label>
+      </div>
+      <button type="submit" style="background:linear-gradient(90deg,#4f8cff,#38e7b0); color:#fff; border:none; border-radius:2rem; font-weight:700; font-size:1.1rem; padding:0.8rem 0; cursor:pointer; transition:background 0.2s;">Send Announcement</button>
+    </form>
+    <div id="announcement-success" style="display:none; color:#38e7b0; font-weight:600; margin-top:1rem; text-align:center;">Announcement sent!</div>
+  </div>
+</div>
 <script src="js/admin-sidebar.js"></script>
+<script>
+// --- Spiritual Events Admin Logic ---
+const spiritualEventsModule = document.getElementById('spiritual-events-module');
+const eventsListDiv = document.getElementById('spiritual-events-list');
+const eventForm = document.getElementById('spiritual-event-form');
+const saveEventsBtn = document.getElementById('save-events-btn');
+const eventsSaveStatus = document.getElementById('events-save-status');
+let eventsData = [];
+
+function renderEventsList() {
+  eventsListDiv.innerHTML = eventsData.length === 0 ? '<div style="color:#888;">No events yet.</div>' :
+    `<table style="width:100%; border-collapse:collapse;">
+      <thead><tr style="background:#f3f4f6;"><th>Date</th><th>Type</th><th>Title</th><th>Description</th><th>Action</th></tr></thead>
+      <tbody>
+        ${eventsData.map((ev, idx) => `
+          <tr>
+            <td><input type="text" value="${ev.date}" onchange="eventsData[${idx}].date=this.value" style="width:80px;"></td>
+            <td><input type="text" value="${ev.type}" onchange="eventsData[${idx}].type=this.value" style="width:80px;"></td>
+            <td><input type="text" value="${ev.title}" onchange="eventsData[${idx}].title=this.value" style="width:120px;"></td>
+            <td><input type="text" value="${ev.description}" onchange="eventsData[${idx}].description=this.value" style="width:180px;"></td>
+            <td><button onclick="removeEvent(${idx})" style="color:#ef4444; background:none; border:none; font-weight:700; cursor:pointer;">Delete</button></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>`;
+}
+
+window.removeEvent = function(idx) {
+  eventsData.splice(idx, 1);
+  renderEventsList();
+};
+
+eventForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const date = document.getElementById('event-date').value.trim();
+  const type = document.getElementById('event-type').value.trim();
+  const title = document.getElementById('event-title').value.trim();
+  const description = document.getElementById('event-description').value.trim();
+  if (date && type && title && description) {
+    eventsData.push({ date, type, title, description });
+    renderEventsList();
+    eventForm.reset();
+  }
+});
+
+saveEventsBtn.addEventListener('click', function() {
+  fetch('/api/events', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(eventsData)
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to save');
+      return res.json();
+    })
+    .then(() => {
+      eventsSaveStatus.textContent = 'Events saved!';
+      eventsSaveStatus.style.color = '#38e7b0';
+      setTimeout(() => { eventsSaveStatus.textContent = ''; }, 1500);
+    })
+    .catch(() => {
+      eventsSaveStatus.textContent = 'Failed to save events.';
+      eventsSaveStatus.style.color = '#ef4444';
+    });
+});
+
+function loadEvents() {
+  fetch('/api/events')
+    .then(res => res.json())
+    .then(data => {
+      eventsData = Array.isArray(data) ? data : [];
+      renderEventsList();
+    });
+}
+
+// Show/hide module on sidebar click
+document.querySelectorAll('.admin-menu-link').forEach(link => {
+  link.addEventListener('click', function() {
+    const section = this.getAttribute('data-section');
+    if (section === 'spiritual-events') {
+      document.querySelectorAll('.dashboard-module').forEach(el => el.style.display = 'none');
+      spiritualEventsModule.style.display = 'block';
+      loadEvents();
+      const pageTitle = document.querySelector('.page-title');
+      if (pageTitle) pageTitle.textContent = 'Spiritual Events Management';
+    }
+  });
+});
+
+// Quick access button for Spiritual Events
+const quickSpiritualBtn = document.getElementById('quick-spiritual-events-btn');
+if (quickSpiritualBtn) {
+  quickSpiritualBtn.addEventListener('click', function() {
+    document.querySelectorAll('.dashboard-module').forEach(el => el.style.display = 'none');
+    spiritualEventsModule.style.display = 'block';
+    loadEvents();
+    const pageTitle = document.querySelector('.page-title');
+    if (pageTitle) pageTitle.textContent = 'Spiritual Events Management';
+  });
+}
+</script>
 <script src="js/admin-dashboard.js"></script>
 <script src="js/admin-club-admin.js"></script>
+<script>
+// Announcement Modal Logic
+const announcementModal = document.getElementById('announcement-modal');
+const openAnnouncementBtn = document.getElementById('open-announcement-modal');
+const closeAnnouncementBtn = document.getElementById('close-announcement-modal');
+const announcementForm = document.getElementById('announcement-form');
+const announcementSuccess = document.getElementById('announcement-success');
+
+openAnnouncementBtn.addEventListener('click', function(e) {
+  e.preventDefault();
+  announcementModal.style.display = 'flex';
+});
+closeAnnouncementBtn.addEventListener('click', function() {
+  announcementModal.style.display = 'none';
+  announcementForm.reset();
+  announcementSuccess.style.display = 'none';
+});
+announcementForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  // Send announcement to backend
+  const message = document.getElementById('announcement-message').value;
+  const audience = announcementForm.elements['audience'].value;
+  fetch('/api/announcements', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, audience })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to send announcement');
+      return res.json();
+    })
+    .then(() => {
+      announcementSuccess.style.display = 'block';
+      setTimeout(() => {
+        announcementModal.style.display = 'none';
+        announcementForm.reset();
+        announcementSuccess.style.display = 'none';
+      }, 1500);
+    })
+    .catch(() => {
+      announcementSuccess.style.display = 'block';
+      announcementSuccess.textContent = 'Failed to send announcement.';
+      setTimeout(() => {
+        announcementModal.style.display = 'none';
+        announcementForm.reset();
+        announcementSuccess.style.display = 'none';
+        announcementSuccess.textContent = 'Announcement sent!';
+      }, 2000);
+    });
+});
+// Leaderboard Section Loader
+(function() {
+  const leaderboardSection = document.getElementById('leaderboard-section');
+  let leaderboardLoaded = false;
+  function showLeaderboardSection() {
+    // Hide all dashboard modules
+    document.querySelectorAll('.dashboard-module').forEach(el => el.style.display = 'none');
+    // Hide analytics cards
+    const analytics = document.querySelector('.analytics-cards');
+    if (analytics) analytics.style.display = 'none';
+    // Show leaderboard section
+    leaderboardSection.style.display = 'block';
+    // Set page title
+    const pageTitle = document.querySelector('.page-title');
+    if (pageTitle) pageTitle.textContent = 'Leaderboard Editor';
+    // Load leaderboard section only once
+    if (!leaderboardLoaded) {
+      fetch('leaderboard-admin-section.html')
+        .then(res => res.text())
+        .then(html => {
+          leaderboardSection.innerHTML = html;
+          leaderboardLoaded = true;
+        });
+    }
+  }
+  // Listen for sidebar click
+  document.querySelectorAll('.admin-menu-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const section = this.getAttribute('data-section');
+      if (section === 'leaderboard') {
+        e.preventDefault();
+        showLeaderboardSection();
+      } else {
+        // Hide leaderboard section and show dashboard modules
+        leaderboardSection.style.display = 'none';
+        document.querySelectorAll('.dashboard-module').forEach(el => el.style.display = '');
+        const analytics = document.querySelector('.analytics-cards');
+        if (analytics) analytics.style.display = '';
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>

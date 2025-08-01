@@ -26,7 +26,7 @@
       <a class="sidebar-link" data-section="submissions" title="Submissions"><span class="icon">📥</span><span class="label">Submissions</span></a>
       <a href="brainwave.html" class="sidebar-link" title="Brainwaves"><span class="icon">🧠</span><span class="label">Brainwaves</span></a>
       <a href="notes.html" class="sidebar-link" title="Notes"><span class="icon">📝</span><span class="label">Notes</span></a>
-      <a class="sidebar-link" data-section="announcements" title="Announcements"><span class="icon">🔔</span><span class="label">Announcements</span></a>
+      <a class="sidebar-link" id="open-teacher-announcement-modal" data-section="announcements" title="Announcements"><span class="icon">🔔</span><span class="label">Announcements</span></a>
 <a href="club.html" class="sidebar-link" title="Clubs"><span class="icon">🧑‍🏫</span><span class="label">Clubs</span></a>
       <a class="sidebar-link" data-section="ai" title="Ask Peter (AI)"><span class="icon">🤖</span><span class="label">Ask Peter</span></a>
       <a class="sidebar-link" data-section="leaderboard" title="Leaderboard"><span class="icon">👑</span><span class="label">Leaderboard</span></a>
@@ -49,6 +49,11 @@
     </div>
   </header>
   <main class="main-content">
+    <!-- Spiritual Events Section -->
+    <section id="spiritual-events" class="dashboard-section">
+      <div class="section-title">🌿 Upcoming Spiritual Events</div>
+      <div class="events-grid" id="teacher-events-grid"></div>
+    </section>
     <!-- Welcome Section -->
     <section id="welcome" class="dashboard-section">
       <div class="welcome-hero glass" style="padding-bottom:2.5rem;">
@@ -456,6 +461,15 @@
           <button id="ai-chat-send" class="w-full bg-blue-600 text-white px-4 py-2 rounded-xl shadow hover:bg-blue-700 transition-all font-semibold">Send</button>
       </div>
   </div>
+  <!-- Announcement Modal for Teachers -->
+  <div id="teacher-announcement-modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100vw; height:100vh; background:rgba(30,34,90,0.45); backdrop-filter:blur(2px); align-items:center; justify-content:center;">
+    <div style="background:#232946; color:#fff; border-radius:1.2rem; box-shadow:0 8px 32px rgba(79,140,255,0.18); padding:2.5rem 2.5rem 2rem 2.5rem; max-width:420px; width:95vw; position:relative;">
+      <button id="close-teacher-announcement-modal" style="position:absolute; top:1.2rem; right:1.2rem; background:none; border:none; font-size:1.5rem; color:#4f8cff; cursor:pointer;">&times;</button>
+      <h2 style="margin-bottom:1.2rem; color:#ffd700; font-weight:700;">Latest Announcement</h2>
+      <div id="teacher-announcement-content" style="font-size:1.1rem; min-height:60px; margin-bottom:1rem;"></div>
+      <div id="teacher-announcement-time" style="font-size:0.95rem; color:#a1a1aa;"></div>
+    </div>
+  </div>
   <script>
     // Sidebar navigation logic for dashboard sections
     document.addEventListener('DOMContentLoaded', function() {
@@ -465,6 +479,33 @@
         link.addEventListener('click', function(e) {
           // Only handle links with data-section (internal dashboard sections)
           const sectionId = link.getAttribute('data-section');
+          // Announcement Modal Logic for Teachers
+          if (link.id === 'open-teacher-announcement-modal') {
+            e.preventDefault();
+            const announcementModal = document.getElementById('teacher-announcement-modal');
+            const announcementContent = document.getElementById('teacher-announcement-content');
+            const announcementTime = document.getElementById('teacher-announcement-time');
+            // Fetch latest announcement from backend
+            fetch('/api/announcements/latest?audience=teachers')
+              .then(res => {
+                if (!res.ok) throw new Error('No announcement');
+                return res.json();
+              })
+              .then(ann => {
+                announcementContent.textContent = ann.message;
+                const date = new Date(ann.timestamp);
+                announcementTime.textContent = 'Sent: ' + date.toLocaleString();
+              })
+              .catch(() => {
+                announcementContent.textContent = 'No new announcements for teachers.';
+                announcementTime.textContent = '';
+              });
+            announcementModal.style.display = 'flex';
+            document.getElementById('close-teacher-announcement-modal').onclick = function() {
+              announcementModal.style.display = 'none';
+            };
+            return;
+          }
           console.log('Sidebar link clicked:', sectionId);
           if (sectionId) {
             e.preventDefault();
@@ -636,6 +677,34 @@
         console.error('Failed to load teacher data:', e);
       }
     });
+  </script>
+  <script src="js/leaderboard.js"></script>
+  <script>
+  // Dynamic Spiritual Events Loader for Teacher Dashboard
+  document.addEventListener('DOMContentLoaded', function() {
+    const eventsGrid = document.getElementById('teacher-events-grid');
+    if (!eventsGrid) return;
+    fetch('/api/events')
+      .then(res => res.json())
+      .then(events => {
+        if (!Array.isArray(events) || events.length === 0) {
+          eventsGrid.innerHTML = '<div style="color:#888;">No upcoming events.</div>';
+          return;
+        }
+        eventsGrid.innerHTML = events.map(ev => `
+          <div class="event-card">
+            <div class="event-date"><h3>${ev.date}</h3><span>${ev.type}</span></div>
+            <div class="event-info">
+              <h4>${ev.title}</h4>
+              <p>${ev.description}</p>
+            </div>
+          </div>
+        `).join('');
+      })
+      .catch(() => {
+        eventsGrid.innerHTML = '<div style="color:#e53e3e;">Failed to load events.</div>';
+      });
+  });
   </script>
   </body>
 </html>

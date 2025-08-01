@@ -110,6 +110,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // Add event listener for Change Leaderboard button
+  const changeLeaderboardBtn = document.getElementById('change-leaderboard-btn');
+  if (changeLeaderboardBtn) {
+    changeLeaderboardBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'leaderboard-admin-section.html';
+    });
+  }
+
   fetchPendingUsers();
   fetchNotifications();
   setInterval(fetchNotifications, 10000); // Poll every 10 seconds

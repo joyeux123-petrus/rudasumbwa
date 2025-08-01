@@ -1,0 +1,20 @@
+[
+  {
+    "date": "10 Jun",
+    "type": "Retreat",
+    "title": "Retreat",
+    "description": "Starts in 2 days"
+  },
+  {
+    "date": "15 Jun",
+    "type": "Mass",
+    "title": "Mass Service",
+    "description": "Special mass for students"
+  },
+  {
+    "date": "20 Jun",
+    "type": "Talk",
+    "title": "Spiritual Talk",
+    "description": "Guest speaker: Fr. Jean"
+  }
+]

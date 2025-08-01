@@ -8,6 +8,40 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+// --- Spiritual Events API ---
+const fs = require('fs');
+const eventsFile = path.join(__dirname, 'spiritual-events.json');
+
+function readEvents() {
+  if (!fs.existsSync(eventsFile)) return [];
+  const data = fs.readFileSync(eventsFile, 'utf-8');
+  try {
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
+}
+
+function writeEvents(events) {
+  fs.writeFileSync(eventsFile, JSON.stringify(events, null, 2), 'utf-8');
+}
+
+// Get all spiritual events
+app.get('/api/events', (req, res) => {
+  const events = readEvents();
+  res.json(events);
+});
+
+// Update all spiritual events (replace all)
+app.post('/api/events', (req, res) => {
+  const events = req.body;
+  if (!Array.isArray(events)) {
+    return res.status(400).json({ error: 'Events should be an array.' });
+  }
+  writeEvents(events);
+  res.json({ success: true });
+});
+
 // Serve uploaded profile pictures
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
