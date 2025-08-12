@@ -1,0 +1,192 @@
+/* Global body styling */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #1b1b1b;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+/* Welcome screen styling */
+#intro-screen {
+  background-color: #333;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#glow-title {
+  font-size: 2.5rem;
+  color: #00f6ff;
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px #00f6ff, 0 0 30px #00f6ff;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 10px #00f6ff; }
+  to { text-shadow: 0 0 30px #00f6ff, 0 0 60px #00cfff; }
+}
+
+#interaction-message {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  color: #c0fefe;
+  font-style: italic;
+}
+
+#start-btn {
+  background-color: #00f6ff;
+  color: #1e1e1e;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#start-btn:hover {
+  background-color: #00d6c8;
+  transform: scale(1.05);
+}
+
+/* Grade selection styling */
+.grade-selection {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  background-color: #333;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.grade-selection button {
+  background-color: #00f6ff;
+  color: #1e1e1e;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 200px;
+}
+
+.grade-selection button:hover {
+  background-color: #00d6c8;
+  transform: scale(1.05);
+}
+
+/* Game Container */
+.game-container {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 0 25px #00ff00;
+  width: 80%;
+  max-width: 900px;
+  text-align: center;
+}
+
+.question-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #00ff00;
+  margin-bottom: 20px;
+}
+
+.answer-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.answer-buttons button {
+  padding: 15px;
+  background: linear-gradient(145deg, #005700, #00ff00);
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #00ff00;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.answer-buttons button:hover {
+  background: linear-gradient(145deg, #00ff00, #005700);
+  transform: scale(1.05);
+}
+
+/* Score & Timer */
+.score-timer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.score, .timer {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #00ff00;
+}
+
+/* Wakanda Modal */
+.wakanda-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 25px #00ff00;
+}
+
+.wakanda-modal h2 {
+  font-size: 2rem;
+  color: #00ff00;
+}
+
+.wakanda-modal p {
+  font-size: 1.2rem;
+  color: #00ff00;
+}
+
+.interactive-btn {
+  padding: 15px 30px;
+  background: linear-gradient(145deg, #008800, #00ff00);
+  color: #fff;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #00ff00;
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.interactive-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(145deg, #00ff00, #008800);
+}

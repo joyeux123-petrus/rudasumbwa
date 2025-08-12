@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Quiz Taking</title>
+  <link rel="stylesheet" href="student-style.css" />
+</head>
+<body>
+  <section id="student-quiz-section" class="container">
+    <div id="quiz-selection">
+      <h2>Available Quizzes</h2>
+      <ul id="quiz-list">
+        <!-- Quizzes will be listed here -->
+      </ul>
+    </div>
+    
+    <div id="quiz-taking" style="display: none;">
+      <h2 id="quiz-title"></h2>
+      <div id="timer" style="font-weight: bold; margin-bottom: 10px;"></div>
+      <div id="questions-container">
+        <!-- Questions will be displayed here -->
+      </div>
+      <button id="submit-quiz" class="btn-primary">Submit Quiz</button>
+      <div id="celebration" style="display:none; font-size: 24px; color: green; margin-top: 20px;">🎉 Congratulations on your high score! 🎉</div>
+    </div>
+  </section>
+
+  <template id="mcq-template">
+    <div class="question">
+      <h3 class="question-text"></h3>
+      <p class="question-marks">Marks: <span></span></p>
+      <div class="options">
+        <label><input type="radio" name="answer" value="A" /> <span class="option-a"></span></label>
+        <label><input type="radio" name="answer" value="B" /> <span class="option-b"></span></label>
+        <label><input type="radio" name="answer" value="C" /> <span class="option-c"></span></label>
+        <label><input type="radio" name="answer" value="D" /> <span class="option-d"></span></label>
+      </div>
+    </div>
+  </template>
+
+  <template id="open-ended-template">
+    <div class="question">
+      <h3 class="question-text"></h3>
+      <p class="question-marks">Marks: <span></span></p>
+      <textarea class="answer" placeholder="Type your answer here..."></textarea>
+    </div>
+  </template>
+
+  <template id="fill-in-the-blanks-template">
+    <div class="question">
+      <h3 class="question-text"></h3>
+      <p class="question-marks">Marks: <span></span></p>
+      <input type="text" class="answer" placeholder="Fill in the blank" />
+    </div>
+  </template>
+
+  <template id="match-the-pairs-template">
+    <div class="question">
+      <h3 class="question-text"></h3>
+      <p class="question-marks">Marks: <span></span></p>
+      <div class="match-pairs-container">
+        <!-- Matching pairs UI to be implemented in student-script.js -->
+      </div>
+    </div>
+  </template>
+
+  <template id="image-based-template">
+    <div class="question">
+      <h3 class="question-text"></h3>
+      <img class="question-image" src="" alt="Question Image" style="max-width: 100%; height: auto;" />
+      <p class="question-marks">Marks: <span></span></p>
+      <input type="text" class="answer" placeholder="Type your answer here..." />
+    </div>
+  </template>
+
+  <template id="audio-template">
+    <div class="question">
+      <h3 class="question-text"></h3>
+      <audio controls class="question-audio"></audio>
+      <p class="question-marks">Marks: <span></span></p>
+      <input type="text" class="answer" placeholder="Type your answer here..." />
+    </div>
+  </template>
+
+  <script src="student-script.js"></script>
+</body>
+</html>

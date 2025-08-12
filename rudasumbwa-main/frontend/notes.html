@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RUDASUMBWA Teacher Notes</title>
+  <link rel="stylesheet" href="styles/teacher-dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .notes-container { max-width: 1200px; margin: 2rem auto; background: rgba(36,40,59,0.7); border-radius: 1.5rem; box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18); padding: 2rem; color: #e0e7ef; }
+    .notes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+    .notes-title { font-size: 2.2rem; font-weight: 800; letter-spacing: 0.04em; }
+    .notes-actions { display: flex; gap: 1rem; }
+    .notes-btn { background: linear-gradient(90deg, #6366f1 60%, #818cf8 100%); color: #fff; font-weight: 700; border: none; border-radius: 9999px; padding: 0.7rem 2rem; font-size: 1.1rem; box-shadow: 0 2px 12px #6366f133; cursor: pointer; transition: background 0.2s, transform 0.2s; outline: none; }
+    .notes-btn:hover { background: linear-gradient(90deg, #818cf8 60%, #6366f1 100%); transform: scale(1.08); }
+    .notes-list, .notes-editor, .notes-preview, .notes-organize, .notes-share, .notes-analytics { margin-bottom: 2.5rem; }
+    .notes-list-table { width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.06); border-radius: 1.2rem; box-shadow: 0 2px 8px #6366f122; }
+    .notes-list-table th, .notes-list-table td { padding: 0.8rem 1rem; border-bottom: 1px solid #232946; }
+    .notes-list-table th { color: #facc15; font-size: 1.1rem; }
+    .notes-list-table tr:last-child td { border-bottom: none; }
+    .notes-editor label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+    .notes-editor input[type="text"], .notes-editor select { width: 100%; padding: 0.6rem 1rem; border-radius: 0.7rem; border: none; margin-bottom: 1rem; font-size: 1.05rem; background: #232946; color: #fff; }
+    .notes-editor textarea { width: 100%; min-height: 120px; border-radius: 0.7rem; border: none; padding: 0.8rem 1rem; font-size: 1.05rem; background: #232946; color: #fff; margin-bottom: 1rem; }
+    .notes-editor input[type="file"] { margin-bottom: 1rem; }
+    .notes-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .notes-tag { background: #6366f1; color: #fff; border-radius: 9999px; padding: 0.3rem 1rem; font-size: 0.95rem; font-weight: 600; }
+    .notes-preview-content { background: #232946; border-radius: 1.2rem; padding: 1.5rem; color: #fff; }
+    .notes-organize, .notes-share, .notes-analytics { background: rgba(255,255,255,0.06); border-radius: 1.2rem; padding: 1.5rem; }
+    .notes-section-title { font-size: 1.3rem; font-weight: 700; color: #facc15; margin-bottom: 1rem; }
+    .notes-search-bar { width: 100%; padding: 0.6rem 1rem; border-radius: 0.7rem; border: none; font-size: 1.05rem; background: #232946; color: #fff; margin-bottom: 1.2rem; }
+    .notes-filters { display: flex; gap: 1rem; margin-bottom: 1.2rem; }
+    .notes-analytics-stats { display: flex; gap: 2rem; margin-top: 1rem; }
+    .notes-analytics-card { background: #232946; border-radius: 1rem; padding: 1rem 2rem; color: #facc15; font-size: 1.1rem; font-weight: 700; }
+    .notes-version-history { margin-top: 1rem; font-size: 0.98rem; color: #a5b4fc; }
+    .notes-accessibility { margin-top: 1rem; }
+    .notes-accessibility label { margin-right: 1.5rem; }
+    .notes-export-btn { background: #facc15; color: #232946; font-weight: 700; border: none; border-radius: 9999px; padding: 0.5rem 1.5rem; font-size: 1rem; margin-right: 1rem; cursor: pointer; }
+    .notes-export-btn:hover { background: #fff; color: #6366f1; }
+  </style>
+</head>
+<body class="dark-bg">
+  <div class="notes-container">
+    <div class="notes-header">
+      <span class="notes-title">📝 Teacher Notes</span>
+      <div class="notes-actions">
+        <button class="notes-btn">Create New Note</button>
+        <button class="notes-btn">Organize</button>
+        <button class="notes-btn">Analytics</button>
+      </div>
+    </div>
+    <!-- Search and Filter -->
+    <input class="notes-search-bar" type="text" placeholder="Search notes by title, tag, or content...">
+    <div class="notes-filters">
+      <select><option>All Subjects</option><option>Mathematics</option><option>Physics</option></select>
+      <select><option>All Classes</option><option>S4A</option><option>S5B</option></select>
+      <select><option>Sort by: Newest</option><option>Oldest</option><option>Title</option></select>
+    </div>
+    <!-- Notes List -->
+    <div class="notes-list">
+      <table class="notes-list-table">
+        <thead>
+          <tr><th>Title</th><th>Subject</th><th>Class</th><th>Tags</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Physics - Newton's Laws</td><td>Physics</td><td>S4A</td><td><span class="notes-tag">Mechanics</span></td><td>2024-06-01</td><td>Published</td><td><button class="notes-btn">Edit</button></td></tr>
+          <tr><td>Math - Algebra Basics</td><td>Mathematics</td><td>S5B</td><td><span class="notes-tag">Algebra</span></td><td>2024-05-28</td><td>Draft</td><td><button class="notes-btn">Edit</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Notes Editor -->
+    <div class="notes-editor">
+      <div class="notes-section-title">Create / Edit Note</div>
+      <label>Title</label>
+      <input type="text" placeholder="e.g., Physics - Newton's Laws">
+      <label>Subject</label>
+      <select><option>Mathematics</option><option>Physics</option></select>
+      <label>Class Level</label>
+      <select><option>S4A</option><option>S5B</option></select>
+      <label>Tags (comma separated)</label>
+      <input type="text" placeholder="e.g., Algebra, Revision, Term 2">
+      <label>Cover Image</label>
+      <input type="file" accept="image/*">
+      <label>Attach Files</label>
+      <input type="file" multiple>
+      <label>Content</label>
+      <textarea placeholder="Write your lesson note here... (Rich text supported)"></textarea>
+      <button class="notes-btn">Save as Draft</button>
+      <button class="notes-btn">Publish Now</button>
+      <button class="notes-btn">Preview</button>
+      <button class="notes-btn">Export to PDF</button>
+      <div class="notes-version-history">Version history: <span>v1.0 (2024-06-01)</span></div>
+    </div>
+    <!-- Notes Preview -->
+    <div class="notes-preview">
+      <div class="notes-section-title">Preview</div>
+      <div class="notes-preview-content">(Preview of the note will appear here, including formatting, images, and attachments.)</div>
+    </div>
+    <!-- Organize Notes -->
+    <div class="notes-organize">
+      <div class="notes-section-title">Organize Notes</div>
+      <div>Folders by subject/class, drag-and-drop, tagging, and filters for easy organization.</div>
+    </div>
+    <!-- Share Notes -->
+    <div class="notes-share">
+      <div class="notes-section-title">Share with Students</div>
+      <div>Select class(es) or group(s) to share with, notify students, and provide download links.</div>
+    </div>
+    <!-- Analytics -->
+    <div class="notes-analytics">
+      <div class="notes-section-title">Track Student Engagement</div>
+      <div class="notes-analytics-stats">
+        <div class="notes-analytics-card">Views: 120</div>
+        <div class="notes-analytics-card">Downloads: 45</div>
+        <div class="notes-analytics-card">Comments: 8</div>
+      </div>
+    </div>
+    <!-- Accessibility -->
+    <div class="notes-accessibility">
+      <div class="notes-section-title">Accessibility</div>
+      <label><input type="checkbox"> Dark Mode</label>
+      <label><input type="checkbox"> Large Font</label>
+      <label><input type="checkbox"> Screen Reader Friendly</label>
+    </div>
+    <!-- Export/Print -->
+    <div class="notes-export">
+      <button class="notes-export-btn">Export to PDF</button>
+      <button class="notes-export-btn">Export to Word</button>
+      <button class="notes-export-btn">Print</button>
+    </div>
+  </div>
+</body>
+</html>

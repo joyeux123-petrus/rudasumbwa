@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RUDASUMBWA Student Notes</title>
+  <link rel="stylesheet" href="styles/teacher-dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .notes-container { max-width: 1200px; margin: 2rem auto; background: rgba(36,40,59,0.7); border-radius: 1.5rem; box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18); padding: 2rem; color: #e0e7ef; }
+    .notes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+    .notes-title { font-size: 2.2rem; font-weight: 800; letter-spacing: 0.04em; }
+    .notes-actions { display: flex; gap: 1rem; }
+    .notes-btn { background: linear-gradient(90deg, #6366f1 60%, #818cf8 100%); color: #fff; font-weight: 700; border: none; border-radius: 9999px; padding: 0.7rem 2rem; font-size: 1.1rem; box-shadow: 0 2px 12px #6366f133; cursor: pointer; transition: background 0.2s, transform 0.2s; outline: none; }
+    .notes-btn:hover { background: linear-gradient(90deg, #818cf8 60%, #6366f1 100%); transform: scale(1.08); }
+    .notes-list, .notes-preview, .notes-library, .notes-favorites, .notes-progress, .notes-analytics { margin-bottom: 2.5rem; }
+    .notes-list-table { width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.06); border-radius: 1.2rem; box-shadow: 0 2px 8px #6366f122; }
+    .notes-list-table th, .notes-list-table td { padding: 0.8rem 1rem; border-bottom: 1px solid #232946; }
+    .notes-list-table th { color: #facc15; font-size: 1.1rem; }
+    .notes-list-table tr:last-child td { border-bottom: none; }
+    .notes-preview-content { background: #232946; border-radius: 1.2rem; padding: 1.5rem; color: #fff; }
+    .notes-section-title { font-size: 1.3rem; font-weight: 700; color: #facc15; margin-bottom: 1rem; }
+    .notes-search-bar { width: 100%; padding: 0.6rem 1rem; border-radius: 0.7rem; border: none; font-size: 1.05rem; background: #232946; color: #fff; margin-bottom: 1.2rem; }
+    .notes-filters { display: flex; gap: 1rem; margin-bottom: 1.2rem; }
+    .notes-tag { background: #6366f1; color: #fff; border-radius: 9999px; padding: 0.3rem 1rem; font-size: 0.95rem; font-weight: 600; }
+    .notes-fav-btn { background: #facc15; color: #232946; border: none; border-radius: 9999px; padding: 0.3rem 1rem; font-size: 1rem; font-weight: 700; cursor: pointer; margin-left: 0.5rem; }
+    .notes-fav-btn.active { background: #6366f1; color: #fff; }
+    .notes-progress-bar { height: 18px; background: #232946; border-radius: 9px; overflow: hidden; margin-bottom: 1rem; }
+    .notes-progress-fill { height: 100%; background: #6366f1; width: 60%; border-radius: 9px; }
+    .notes-analytics-stats { display: flex; gap: 2rem; margin-top: 1rem; }
+    .notes-analytics-card { background: #232946; border-radius: 1rem; padding: 1rem 2rem; color: #facc15; font-size: 1.1rem; font-weight: 700; }
+    .notes-export-btn { background: #facc15; color: #232946; font-weight: 700; border: none; border-radius: 9999px; padding: 0.5rem 1.5rem; font-size: 1rem; margin-right: 1rem; cursor: pointer; }
+    .notes-export-btn:hover { background: #fff; color: #6366f1; }
+  </style>
+</head>
+<body class="dark-bg">
+  <div class="notes-container">
+    <div class="notes-header">
+      <span class="notes-title">📚 Student Notes Library</span>
+      <div class="notes-actions">
+        <button class="notes-btn">Favorites</button>
+        <button class="notes-btn">Progress</button>
+        <button class="notes-btn">Analytics</button>
+      </div>
+    </div>
+    <!-- Search and Filter -->
+    <input class="notes-search-bar" type="text" placeholder="Search notes by title, tag, or content...">
+    <div class="notes-filters">
+      <select><option>All Subjects</option><option>Mathematics</option><option>Physics</option></select>
+      <select><option>All Teachers</option><option>Mr. Nkurunziza</option></select>
+      <select><option>All Types</option><option>PDF</option><option>Video</option><option>Audio</option><option>DOCX</option></select>
+      <select><option>Sort by: Newest</option><option>Oldest</option><option>Title</option></select>
+    </div>
+    <!-- Notes Library List -->
+    <div class="notes-library">
+      <table class="notes-list-table">
+        <thead>
+          <tr><th>Title</th><th>Subject</th><th>Teacher</th><th>Date</th><th>Type</th><th>Tags</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Physics - Newton's Laws</td><td>Physics</td><td>Mr. Nkurunziza</td><td>2024-06-01</td><td>PDF</td><td><span class="notes-tag">Mechanics</span></td><td><button class="notes-btn">Preview</button><button class="notes-export-btn">Download</button><button class="notes-fav-btn">★</button></td></tr>
+          <tr><td>Math - Algebra Basics</td><td>Mathematics</td><td>Mr. Nkurunziza</td><td>2024-05-28</td><td>DOCX</td><td><span class="notes-tag">Algebra</span></td><td><button class="notes-btn">Preview</button><button class="notes-export-btn">Download</button><button class="notes-fav-btn">★</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Notes Preview -->
+    <div class="notes-preview">
+      <div class="notes-section-title">Preview</div>
+      <div class="notes-preview-content">(Preview of the note will appear here, including PDF, DOCX, video, or audio streaming.)</div>
+    </div>
+    <!-- Favorites -->
+    <div class="notes-favorites">
+      <div class="notes-section-title">Favorites / Bookmarks</div>
+      <div>(List of favorite notes will appear here.)</div>
+    </div>
+    <!-- Progress & History -->
+    <div class="notes-progress">
+      <div class="notes-section-title">Progress & History</div>
+      <div class="notes-progress-bar"><div class="notes-progress-fill" style="width:60%"></div></div>
+      <div>Notes read: 12 / 20 | Completed: 8 | To Review: 4</div>
+      <div>History: (List of accessed notes by date)</div>
+    </div>
+    <!-- Interactive Summaries -->
+    <div class="notes-section-title">Interactive Summaries</div>
+    <div class="notes-preview-content">(AI-generated or teacher-written summaries, key points, and quick quizzes/flashcards will appear here.)</div>
+    <!-- Comments & Questions -->
+    <div class="notes-section-title">Ask a Question / Comment</div>
+    <div class="notes-preview-content">(Students can post questions or comments on each note. Moderation and reply system.)</div>
+    <!-- Analytics -->
+    <div class="notes-analytics">
+      <div class="notes-section-title">Analytics Dashboard</div>
+      <div class="notes-analytics-stats">
+        <div class="notes-analytics-card">Notes Read: 12</div>
+        <div class="notes-analytics-card">Quizzes Completed: 5</div>
+        <div class="notes-analytics-card">Time Spent: 3h 20m</div>
+      </div>
+    </div>
+    <!-- Accessibility -->
+    <div class="notes-section-title">Accessibility</div>
+    <div class="notes-preview-content">Dark mode, font size, screen reader, keyboard navigation, and responsive design supported.</div>
+    <!-- Export/Print -->
+    <div class="notes-export">
+      <button class="notes-export-btn">Download Study Pack (ZIP)</button>
+      <button class="notes-export-btn">Print</button>
+    </div>
+  </div>
+</body>
+</html>

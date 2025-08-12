@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUDASUMBWA Student Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/tailwind-overrides.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://unpkg.com/aframe@1.4.2/dist/aframe.min.js"></script>
+    <style>
+        body { font-family: 'Inter', 'Poppins', 'SF Pro Display', sans-serif; }
+        html.dark, body.dark, body {
+            background: linear-gradient(135deg, #181c2b 0%, #232946 100%) !important;
+            color: #e0e6f7;
+        }
+        .glass {
+            background: rgba(36, 40, 56, 0.55);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+        .glassmorphic {
+            background: rgba(36, 40, 56, 0.45);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.10);
+        }
+        .dashboard-section, .gospel-card, .club-card, .leaderboard-student, .leaderboard-club, .bg-white, .p-6, .p-8 {
+            background: rgba(36, 40, 56, 0.55) !important;
+            color: #e0e6f7 !important;
+            border-color: rgba(255,255,255,0.10) !important;
+        }
+        .sidebar-link {
+            background: rgba(36, 40, 56, 0.25);
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background: rgba(80, 100, 255, 0.25);
+            color: #ffd700 !important;
+            box-shadow: 0 2px 8px 0 rgba(80, 100, 255, 0.10);
+        }
+        .shadow-lg, .shadow-2xl {
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18) !important;
+        }
+        .material-icons {
+            color: #ffd700;
+        }
+        .club-tag.active, .club-tag:focus {
+            background: rgba(80, 100, 255, 0.25);
+            color: #ffd700;
+        }
+        .club-tag {
+            background: rgba(36, 40, 56, 0.25);
+            color: #e0e6f7;
+            border-radius: 9999px;
+            padding: 0.5rem 1.25rem;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.10);
+            transition: background 0.3s, color 0.3s;
+        }
+        .join-btn {
+            background: linear-gradient(90deg, #5f72bd 0%, #9b23ea 100%);
+            color: #fff;
+            border-radius: 1rem;
+            padding: 0.5rem 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px 0 rgba(80, 100, 255, 0.10);
+            transition: background 0.3s, transform 0.2s;
+        }
+        .join-btn:hover {
+            background: linear-gradient(90deg, #9b23ea 0%, #5f72bd 100%);
+            transform: scale(1.05);
+        }
+        .gospel-card {
+            background: rgba(36, 40, 56, 0.65) !important;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.10);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            padding: 2rem;
+        }
+        .gospel-header h2 {
+            color: #ffd700;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .gospel-header p {
+            color: #e0e6f7;
+        }
+        .gospel-content h4 {
+            color: #ffd700;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .gospel-content p {
+            color: #e0e6f7;
+        }
+        .badge {
+            background: rgba(255,255,255,0.10);
+            color: #ffd700;
+            border-radius: 9999px;
+            padding: 0.25rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .transition, .transition-all, .transition-transform {
+            transition: all 0.3s cubic-bezier(.4,0,.2,1);
+        }
+        /* Responsive fixes for dark glassmorphism */
+        @media (max-width: 768px) {
+            .dashboard-section, .gospel-card, .club-card, .leaderboard-student, .leaderboard-club {
+                padding: 1rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="dark bg-gray-900 text-gray-100 min-h-screen relative">
+    <!-- Sidebar Overlay for mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-30 hidden"></div>
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed md:static top-0 left-0 h-full w-64 glass flex flex-col justify-between py-8 px-2 shadow-2xl z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+            <div>
+                <div class="flex items-center justify-between mb-10 px-4">
+                    <img src="assets/images/profile-placeholder.png" alt="Profile" class="w-16 h-16 rounded-full border-4 border-blue-400 shadow-lg">
+                    <button id="sidebar-close-btn" class="md:hidden text-white text-3xl focus:outline-none"><span class="material-icons">close</span></button>
+                </div>
+                <nav class="space-y-3">
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="dashboard-main"><span class="material-icons text-3xl">dashboard</span><span class="hidden md:inline">Dashboard</span></a>
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="progress"><span class="material-icons text-3xl">emoji_events</span><span class="hidden md:inline">Progress</span></a>
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="grades"><span class="material-icons text-3xl">grading</span><span class="hidden md:inline">Grades</span></a>
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="gospel"><span class="material-icons text-3xl">auto_stories</span><span class="hidden md:inline">Gospel</span></a>
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="schedule"><span class="material-icons text-3xl">calendar_today</span><span class="hidden md:inline">Schedule</span></a>
+                    <a href="#" id="open-student-announcement-modal" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="announcements"><span class="material-icons text-3xl">campaign</span><span class="hidden md:inline">Announcements</span></a>
+                    <a href="club.html" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="clubs"><span class="material-icons text-3xl">groups</span><span class="hidden md:inline">Clubs</span></a>
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="ai"><span class="material-icons text-3xl">smart_toy</span><span class="hidden md:inline">Ask Peter</span></a>
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="pending"><span class="material-icons text-3xl">pending_actions</span><span class="hidden md:inline">Pending</span></a>
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="feedback"><span class="material-icons text-3xl">feedback</span><span class="hidden md:inline">Feedback</span></a>
+                    <a href="student-notes.html" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold"><span class="material-icons text-3xl">menu_book</span><span class="hidden md:inline">Notes</span></a>
+                    <a href="brainwave.html" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold"><span class="material-icons text-3xl">psychology</span><span class="hidden md:inline">Brainwave</span></a>
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="download"><span class="material-icons text-3xl">download</span><span class="hidden md:inline">Download Center</span></a>
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="spiritual"><span class="material-icons text-3xl">spa</span><span class="hidden md:inline">Spiritual Events</span></a>
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="comments"><span class="material-icons text-3xl">forum</span><span class="hidden md:inline">Comments</span></a>
+                    <a href="#" class="sidebar-link flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-indigo-800 transition-all text-white text-lg font-semibold" data-section="settings"><span class="material-icons text-3xl">settings</span><span class="hidden md:inline">Settings</span></a>
+                </nav>
+            </div>
+            <div class="flex flex-col items-center mt-10">
+                <span class="text-base text-white font-bold">Emmanuel</span>
+                <span class="text-sm text-green-400 font-semibold">Active</span>
+            </div>
+        </aside>
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col">
+            <!-- Top Bar/Header -->
+            <header class="flex flex-col bg-indigo-900 shadow-lg z-10 glass">
+                <div class="flex items-center justify-between px-8 pt-4">
+                    <div class="flex items-center space-x-4">
+                        <img src="images/logo.PNG" alt="School Logo" class="w-10 h-10 rounded-full bg-white border-2 border-blue-400">
+                        <span class="text-2xl font-bold text-white tracking-wide">RUDASUMBWA</span>
+                        <span class="hidden md:inline text-xl font-bold text-white tracking-wide">Dashboard</span>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <span id="current-time" class="text-white text-sm mb-1"></span>
+                        <div class="flex items-center space-x-4">
+                            <input type="text" placeholder="Search..." class="px-3 py-2 rounded-lg bg-indigo-900 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <button class="relative">
+                                <span class="material-icons text-2xl text-white">notifications</span>
+                                <span class="absolute -top-1 -right-1 bg-red-500 text-xs rounded-full px-1">2</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main Dashboard Content -->
+            <main class="flex-1 overflow-y-auto p-10">
+                <!-- Dashboard Main: Leaderboard, Announcements, Learning Center Tabs -->
+                <section id="dashboard-main" class="dashboard-section glassmorphic">
+                    <!-- Roles & Permissions -->
+                    <div class="mb-8">
+                        <div class="glassmorphic p-6 rounded-2xl shadow flex flex-col md:flex-row gap-6 items-center border border-blue-400">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">school</span>Teachers</h3>
+                                <ul class="list-disc ml-8 text-gray-300">
+                                    <li>Can create classes, quizzes, notes</li>
+                                    <li>View student submissions</li>
+                                    <li>Grade them</li>
+                                </ul>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-yellow-400 mb-2 flex items-center"><span class="material-icons mr-2">person</span>Students</h3>
+                                <ul class="list-disc ml-8 text-gray-300">
+                                    <li>Can join classes</li>
+                                    <li>View notes</li>
+                                    <li>Submit quizzes</li>
+                                    <li>View score</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Leaderboard -->
+                    <h2 class="text-2xl font-bold text-yellow-400 mb-6">Top Students Leaderboard</h2>
+                    <div class="flex flex-col items-center gap-6 mb-10">
+                        <div class="leaderboard-student w-full max-w-xl flex items-center glassmorphic p-4 cursor-pointer hover:scale-105 transition-transform border border-yellow-300" data-name="Jean Bosco">
+                            <img src="assets/images/profile-placeholder.png" alt="Jean Bosco" class="w-16 h-16 rounded-full border-4 border-yellow-400 shadow mr-4">
+                            <div class="flex-1">
+                                <div class="font-bold text-lg text-yellow-400 flex items-center">Jean Bosco <span class="ml-2 text-2xl">🥇</span></div>
+                                <div class="text-sm text-gray-300">Gold - 1500 XP</div>
+                            </div>
+                        </div>
+                        <div class="leaderboard-student w-full max-w-xl flex items-center glassmorphic p-4 cursor-pointer hover:scale-105 transition-transform border border-gray-300" data-name="Marie Claire">
+                            <img src="assets/images/profile-placeholder.png" alt="Marie Claire" class="w-16 h-16 rounded-full border-4 border-gray-400 shadow mr-4">
+                            <div class="flex-1">
+                                <div class="font-bold text-lg text-gray-200 flex items-center">Marie Claire <span class="ml-2 text-2xl">🥈</span></div>
+                                <div class="text-sm text-gray-300">Silver - 1400 XP</div>
+                            </div>
+                        </div>
+                        <div class="leaderboard-student w-full max-w-xl flex items-center glassmorphic p-4 cursor-pointer hover:scale-105 transition-transform border border-yellow-800" data-name="You">
+                            <img src="assets/images/profile-placeholder.png" alt="You" class="w-16 h-16 rounded-full border-4 border-yellow-800 shadow mr-4">
+                            <div class="flex-1">
+                                <div class="font-bold text-lg text-yellow-600 flex items-center">You <span class="ml-2 text-2xl">🥉</span></div>
+                                <div class="text-sm text-gray-300">Bronze - 1300 XP</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Gospel of the Day below Leaderboard -->
+                    <div class="gospel-card mb-10">
+                      <div class="gospel-header">
+                        <h2>📖 Gospel of the Day</h2>
+                        <p id="gospel-date">Loading date...</p>
+                      </div>
+                      <div class="gospel-content">
+                        <h4 id="gospel-title">Loading reference...</h4>
+                        <p id="gospel-text">Please wait while we load today’s Gospel for you...</p>
+                        <a id="gospel-link" href="https://bible.usccb.org/daily-bible-reading" target="_blank" rel="noopener" class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold shadow hover:bg-blue-700 transition">Read Full Gospel at USCCB</a>
+                      </div>
+                    </div>
+                    <!-- Student Modal -->
+                    <div id="student-modal-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-50 hidden"></div>
+                    <div id="student-modal" class="fixed top-1/2 left-1/2 z-50 glassmorphic w-96 p-6 transform -translate-x-1/2 -translate-y-1/2 hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="font-bold text-lg text-blue-400">Student Details</span>
+                            <button id="student-modal-close" class="text-blue-400 text-2xl focus:outline-none"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="flex flex-col items-center mb-4">
+                            <img id="student-modal-avatar" src="assets/images/profile-placeholder.png" alt="Avatar" class="w-20 h-20 rounded-full border-4 border-blue-400 shadow mb-2">
+                            <div class="font-bold text-xl mb-1" id="student-modal-name">Name</div>
+                            <div class="text-2xl mb-1" id="student-modal-medal">🥇</div>
+                            <div class="text-gray-300 mb-1" id="student-modal-class">Class</div>
+                            <div class="mb-1" id="student-modal-clubs"></div>
+                            <div class="text-blue-400 font-bold" id="student-modal-xp">XP</div>
+                        </div>
+                        <button class="w-full bg-blue-600 text-white px-4 py-2 rounded-xl shadow hover:bg-blue-700 transition-all font-semibold">View Full Profile</button>
+                    </div>
+                    <!-- Announcements -->
+                    <h2 class="text-2xl font-bold text-yellow-400 mb-4">Announcements</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                        <div class="glassmorphic rounded-2xl p-6 shadow border border-gray-200">
+                            <div class="flex items-center mb-2">
+                                <span class="material-icons text-blue-400 mr-2">campaign</span>
+                                <span class="font-bold text-lg">New exam schedule released!</span>
+                            </div>
+                            <div class="text-gray-300 mb-2">Unread</div>
+                            <div class="flex space-x-2">
+                                <button class="text-2xl">🎉</button>
+                                <button class="text-2xl">👏</button>
+                                <button class="text-2xl">🙏</button>
+                            </div>
+                        </div>
+                        <div class="glassmorphic rounded-2xl p-6 shadow border border-gray-200">
+                            <div class="flex items-center mb-2">
+                                <span class="material-icons text-blue-400 mr-2">campaign</span>
+                                <span class="font-bold text-lg">Science Club meeting this Friday.</span>
+                            </div>
+                            <div class="text-gray-300 mb-2">Read</div>
+                            <div class="flex space-x-2">
+                                <button class="text-2xl">🎉</button>
+                                <button class="text-2xl">👏</button>
+                                <button class="text-2xl">🙏</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Learning Center Cards -->
+                    <h2 class="text-2xl font-bold text-yellow-400 mb-4">Learning Center</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+                        <div class="glassmorphic p-8 shadow-lg border border-blue-100 flex flex-col items-center hover:scale-105 transition-transform cursor-pointer group" onclick="window.location.href='student-notes.html'">
+                            <span class="material-icons text-5xl text-blue-400 mb-4 group-hover:animate-bounce">menu_book</span>
+                            <div class="font-bold text-xl mb-2">Notes</div>
+                            <div class="text-gray-300 mb-4">View and download all your subject notes.</div>
+                            <button class="bg-blue-600 text-white px-6 py-2 rounded-xl shadow hover:bg-blue-700 transition-all font-semibold">Open Notes</button>
+                        </div>
+                        <div class="glassmorphic p-8 shadow-lg border border-green-100 flex flex-col items-center hover:scale-105 transition-transform cursor-pointer group">
+                            <span class="material-icons text-5xl text-green-400 mb-4 group-hover:animate-bounce">quiz</span>
+                            <div class="font-bold text-xl mb-2">Quiz</div>
+                            <div class="text-gray-300 mb-4">Take quizzes and view your results instantly.</div>
+                            <button class="bg-green-600 text-white px-6 py-2 rounded-xl shadow hover:bg-green-700 transition-all font-semibold">Start Quiz</button>
+                        </div>
+                        <div class="glassmorphic p-8 shadow-lg border border-purple-100 flex flex-col items-center hover:scale-105 transition-transform cursor-pointer group" onclick="window.location.href='brainwave.html'">
+                            <span class="material-icons text-5xl text-purple-400 mb-4 group-hover:animate-bounce">psychology</span>
+                            <div class="font-bold text-xl mb-2">Brainwave</div>
+                            <div class="text-gray-300 mb-4">Get AI-powered study tips and summaries.</div>
+                            <button onclick="window.location.href='brainwave.html'" class="bg-purple-600 text-white px-6 py-2 rounded-xl shadow hover:bg-purple-700 transition-all font-semibold">AI Suggestion</button>
+                        </div>
+                    </div>
+                </section>
+                <!-- All other sections, each with class 'dashboard-section' and unique id, hidden by default -->
+                <section id="progress" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="grades" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="gospel" class="dashboard-section glassmorphic">
+                  <div class="gospel-card">
+                    <div class="gospel-header">
+                      <h2>📖 Gospel of the Day</h2>
+                      <p id="gospel-date">Loading date...</p>
+                    </div>
+                    <div class="gospel-content">
+                      <h4 id="gospel-title">Loading reference...</h4>
+                      <p id="gospel-text">Please wait while we load today’s Gospel for you...</p>
+                      <a id="gospel-link" href="https://bible.usccb.org/daily-bible-reading" target="_blank" rel="noopener" class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold shadow hover:bg-blue-700 transition">Read Full Gospel at USCCB</a>
+                    </div>
+                  </div>
+                </section>
+                <section id="schedule" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="announcements" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="clubs" class="dashboard-section hidden glassmorphic">
+                  <!-- Clubs Showcase Section -->
+                  <div class="clubs-showcase py-8">
+                    <h2 class="text-3xl font-extrabold text-center text-yellow-400 mb-6 tracking-tight">🌟 Explore Our Clubs</h2>
+                    <!-- Filterable Tags -->
+                    <div class="flex flex-wrap justify-center gap-3 mb-8">
+                      <button class="club-tag active" data-tag="all">All</button>
+                      <button class="club-tag" data-tag="science">🔬 Science</button>
+                      <button class="club-tag" data-tag="music">🎵 Music</button>
+                      <button class="club-tag" data-tag="art">🎨 Art</button>
+                      <button class="club-tag" data-tag="drama">🎭 Drama</button>
+                      <button class="club-tag" data-tag="coding">🤖 Coding</button>
+                      <button class="club-tag" data-tag="football">⚽ Football</button>
+                    </div>
+                    <!-- Club Cards Grid -->
+                    <div class="club-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center">
+                      <!-- Example Club Card -->
+                      <div class="club-card glassmorphic group" data-tags="science">
+                        <div class="flex items-center gap-3 mb-2">
+                          <span class="text-4xl">🔬</span>
+                          <h3 class="text-xl font-bold">Science Club</h3>
+                        </div>
+                        <p class="text-yellow-400 font-semibold mb-1">"Discover the universe with us!"</p>
+                        <p class="desc text-gray-300 mb-2">We explore fascinating experiments and organize science fairs. Open to curious minds!</p>
+                        <div class="badges flex gap-2 mb-2">
+                          <span class="badge">🧪 Weekly Experiments</span>
+                          <span class="badge">🥇 2024 Winner</span>
+                        </div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "Science Fair coming soon!"</div>
+                        <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
+                      </div>
+                      <div class="club-card glassmorphic group" data-tags="music">
+                        <div class="flex items-center gap-3 mb-2">
+                          <span class="text-4xl">🎵</span>
+                          <h3 class="text-xl font-bold">Music Club</h3>
+                        </div>
+                        <p class="text-yellow-400 font-semibold mb-1">"Feel the rhythm, live the beat."</p>
+                        <p class="desc text-gray-300 mb-2">Band rehearsals, music production, and live performances. All talents welcome!</p>
+                        <div class="badges flex gap-2 mb-2">
+                          <span class="badge">🎤 Live Shows</span>
+                          <span class="badge">🏆 Top Club 2023</span>
+                        </div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "Preparing for Inter-school Music Fest!"</div>
+                        <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
+                      </div>
+                      <div class="club-card glassmorphic group" data-tags="art">
+                        <div class="flex items-center gap-3 mb-2">
+                          <span class="text-4xl">🎨</span>
+                          <h3 class="text-xl font-bold">Art Club</h3>
+                        </div>
+                        <p class="text-yellow-400 font-semibold mb-1">"Unleashing Creativity."</p>
+                        <p class="desc text-gray-300 mb-2">Painting, drawing, and digital art workshops. Express yourself!</p>
+                        <div class="badges flex gap-2 mb-2">
+                          <span class="badge">🖌️ Art Exhibits</span>
+                          <span class="badge">⭐ Most Creative</span>
+                        </div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "Art Expo next month!"</div>
+                        <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
+                      </div>
+                      <div class="club-card glassmorphic group" data-tags="drama">
+                        <div class="flex items-center gap-3 mb-2">
+                          <span class="text-4xl">🎭</span>
+                          <h3 class="text-xl font-bold">Drama Club</h3>
+                        </div>
+                        <p class="text-yellow-400 font-semibold mb-1">"Express, Act, Inspire."</p>
+                        <p class="desc text-gray-300 mb-2">Performing arts and creative theatre productions for all students.</p>
+                        <div class="badges flex gap-2 mb-2">
+                          <span class="badge">🎬 Stage Play</span>
+                          <span class="badge">🏆 Winner 2023</span>
+                        </div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "Drama Night in June!"</div>
+                        <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
+                      </div>
+                      <div class="club-card glassmorphic group" data-tags="coding">
+                        <div class="flex items-center gap-3 mb-2">
+                          <span class="text-4xl">🤖</span>
+                          <h3 class="text-xl font-bold">Coding Club</h3>
+                        </div>
+                        <p class="text-yellow-400 font-semibold mb-1">"Code. Create. Conquer."</p>
+                        <p class="desc text-gray-300 mb-2">Learn programming, build apps, and compete in hackathons!</p>
+                        <div class="badges flex gap-2 mb-2">
+                          <span class="badge">💻 Hackathons</span>
+                          <span class="badge">🥈 Runner-up 2024</span>
+                        </div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "App Challenge this term!"</div>
+                        <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
+                      </div>
+                      <div class="club-card glassmorphic group" data-tags="football">
+                        <div class="flex items-center gap-3 mb-2">
+                          <span class="text-4xl">⚽</span>
+                          <h3 class="text-xl font-bold">Football Club</h3>
+                        </div>
+                        <p class="text-yellow-400 font-semibold mb-1">"Play. Win. Repeat."</p>
+                        <p class="desc text-gray-300 mb-2">Teamwork, training, and tournaments. For all skill levels!</p>
+                        <div class="badges flex gap-2 mb-2">
+                          <span class="badge">🏅 League Champs</span>
+                          <span class="badge">🔥 Active Now</span>
+                        </div>
+                        <div class="club-shout text-xs italic text-blue-400 mb-2">📢 "Training every Saturday!"</div>
+                        <button class="join-btn" onclick="window.location='/login'">Join This Club</button>
+                      </div>
+                    </div>
+                    <!-- Leaderboard -->
+                    <div class="mt-12">
+                      <h3 class="text-xl font-bold text-center text-yellow-400 mb-4">🏆 Top Clubs This Term</h3>
+                      <div class="flex flex-wrap justify-center gap-6">
+                        <div class="leaderboard-club glassmorphic px-6 py-4 flex flex-col items-center border-2 border-yellow-400">
+                          <span class="text-3xl mb-1">🥇</span>
+                          <span class="font-bold text-lg text-yellow-400">Music Club</span>
+                          <span class="text-sm text-gray-300">90 Points</span>
+                        </div>
+                        <div class="leaderboard-club glassmorphic px-6 py-4 flex flex-col items-center border-2 border-gray-400">
+                          <span class="text-3xl mb-1">🥈</span>
+                          <span class="font-bold text-lg text-gray-200">Science Club</span>
+                          <span class="text-sm text-gray-300">82 Points</span>
+                        </div>
+                        <div class="leaderboard-club glassmorphic px-6 py-4 flex flex-col items-center border-2 border-yellow-800">
+                          <span class="text-3xl mb-1">🥉</span>
+                          <span class="font-bold text-lg text-yellow-600">ICT Club</span>
+                          <span class="text-sm text-gray-300">79 Points</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section id="ai" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="pending" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="feedback" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="download" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="spiritual" class="dashboard-section hidden glassmorphic">
+                  <h2 class="text-2xl font-bold text-yellow-400 mb-6 flex items-center"><span class="material-icons mr-2">spa</span>Spiritual Events</h2>
+                  <div class="events-grid" id="student-events-grid"></div>
+                </section>
+                <section id="comments" class="dashboard-section hidden glassmorphic"> ... </section>
+                <section id="settings" class="dashboard-section hidden glassmorphic">
+  <div class="max-w-3xl mx-auto glassmorphic p-8 border border-gray-200">
+    <h2 class="text-3xl font-bold text-yellow-400 mb-6 flex items-center"><span class="material-icons mr-2">settings</span>Settings</h2>
+    <div class="space-y-8">
+      <!-- Account Settings -->
+      <div>
+        <h3 class="text-xl font-semibold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">lock</span>Account Settings</h3>
+        <ul class="list-disc ml-8 text-gray-300 space-y-1">
+          <li>Change password</li>
+          <li>Update profile photo</li>
+          <li>Edit personal info (name, class, district, parish)</li>
+          <li>Two-step verification (optional)</li>
+          <li>Delete account (only with admin approval)</li>
+        </ul>
+      </div>
+      <!-- Academic Preferences -->
+      <div>
+        <h3 class="text-xl font-semibold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">school</span>Academic Preferences</h3>
+        <ul class="list-disc ml-8 text-gray-300 space-y-1">
+          <li>Choose preferred subject categories</li>
+          <li>Enable/disable notifications for:
+            <ul class="list-disc ml-8">
+              <li>New quizzes</li>
+              <li>LECTIONES updates</li>
+              <li>Club activities</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!-- UI/Theme -->
+      <div>
+        <h3 class="text-xl font-semibold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">palette</span>UI/Theme</h3>
+        <ul class="list-disc ml-8 text-gray-300 space-y-1">
+          <li>Dark/Light mode toggle</li>
+          <li>Language preference (Kinyarwanda, English, French)</li>
+        </ul>
+      </div>
+      <!-- Notifications -->
+      <div>
+        <h3 class="text-xl font-semibold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">notifications</span>Notifications</h3>
+        <ul class="list-disc ml-8 text-gray-300 space-y-1">
+          <li>Manage email/sms/onsite notification preferences</li>
+          <li>Mute notifications during specific hours</li>
+        </ul>
+      </div>
+      <!-- Contact & Support -->
+      <div>
+        <h3 class="text-xl font-semibold text-blue-400 mb-2 flex items-center"><span class="material-icons mr-2">support_agent</span>Contact & Support</h3>
+        <ul class="list-disc ml-8 text-gray-300 space-y-1">
+          <li>Report an issue</li>
+          <li>Contact head of studies</li>
+          <li>Request help via chat/email</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+            </main>
+        </div>
+    </div>
+    <!-- Floating Ask Peter AI Button and Chat Drawer -->
+    <button id="ai-float-btn" class="fixed bottom-8 right-8 z-50 bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-full p-5 shadow-2xl hover:scale-110 transition-transform flex items-center justify-center focus:outline-none">
+        <span class="material-icons text-3xl animate-pulse">smart_toy</span>
+        <span id="ai-float-expand" class="material-icons text-xl ml-1">expand_less</span>
+    </button>
+    <div id="ai-chat-drawer" class="hidden fixed bottom-24 right-8 w-80 glassmorphic z-50 flex flex-col">
+        <div class="flex items-center justify-between p-4 border-b border-blue-100 bg-blue-50 rounded-t-2xl">
+            <span class="font-bold text-blue-400 flex items-center"><span class="material-icons mr-2">smart_toy</span>Ask Peter (AI)</span>
+            <button id="ai-chat-close" class="text-blue-400 text-2xl focus:outline-none"><span class="material-icons">close</span></button>
+        </div>
+        <div id="ai-chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50" style="min-height: 180px;"></div>
+        <div class="p-4 border-t border-blue-100 bg-blue-50 rounded-b-2xl">
+            <input id="ai-chat-input" type="text" class="w-full p-2 rounded bg-white text-gray-900 border border-gray-300 mb-2" placeholder="Ask a question...">
+            <button id="ai-chat-send" class="w-full bg-blue-600 text-white px-4 py-2 rounded-xl shadow hover:bg-blue-700 transition-all font-semibold">Send</button>
+        </div>
+    </div>
+    <script src="js/dashboard.js"></script>
+    <script src="js/gsap-animations.js"></script>
+    <script src="js/aframe-clubroom.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/ai-chat.js"></script>
+    <script src="js/leaderboard-modal.js"></script>
+    <script>
+    // Dynamic Spiritual Events Loader for Student Dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+      const eventsGrid = document.getElementById('student-events-grid');
+      if (!eventsGrid) return;
+      fetch('/api/events')
+        .then(res => res.json())
+        .then(events => {
+          if (!Array.isArray(events) || events.length === 0) {
+            eventsGrid.innerHTML = '<div style="color:#888;">No upcoming events.</div>';
+            return;
+          }
+          eventsGrid.innerHTML = events.map(ev => `
+            <div class="event-card glassmorphic p-4 mb-4 rounded-xl shadow border border-blue-400">
+              <div class="flex items-center gap-4 mb-2">
+                <div class="event-date bg-blue-900 text-yellow-400 px-4 py-2 rounded-lg text-lg font-bold flex flex-col items-center justify-center"><span>${ev.date}</span><span class="text-xs text-blue-200">${ev.type}</span></div>
+                <div class="event-info">
+                  <h4 class="text-xl font-bold text-yellow-400 mb-1">${ev.title}</h4>
+                  <p class="text-gray-200">${ev.description}</p>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        })
+        .catch(() => {
+          eventsGrid.innerHTML = '<div style="color:#e53e3e;">Failed to load events.</div>';
+        });
+    });
+    </script>
+    <script src="js/clubs-showcase.js"></script>
+    <!-- Announcement Modal for Students -->
+    <div id="student-announcement-modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100vw; height:100vh; background:rgba(30,34,90,0.45); backdrop-filter:blur(2px); align-items:center; justify-content:center;">
+      <div style="background:#232946; color:#fff; border-radius:1.2rem; box-shadow:0 8px 32px rgba(79,140,255,0.18); padding:2.5rem 2.5rem 2rem 2.5rem; max-width:420px; width:95vw; position:relative;">
+        <button id="close-student-announcement-modal" style="position:absolute; top:1.2rem; right:1.2rem; background:none; border:none; font-size:1.5rem; color:#4f8cff; cursor:pointer;">&times;</button>
+        <h2 style="margin-bottom:1.2rem; color:#ffd700; font-weight:700;">Latest Announcement</h2>
+        <div id="student-announcement-content" style="font-size:1.1rem; min-height:60px; margin-bottom:1rem;"></div>
+        <div id="student-announcement-time" style="font-size:0.95rem; color:#a1a1aa;"></div>
+      </div>
+    </div>
+    <script>
+    // Tab switching with GSAP animation (Learning Center only)
+    document.addEventListener('DOMContentLoaded', function() {
+        // Time update
+        function updateTime() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('current-time').textContent = `${h}:${m}:${s}`;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+        // Tabs
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        tabBtns.forEach((btn, idx) => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active-tab', 'text-blue-400', 'font-bold'));
+                btn.classList.add('active-tab', 'text-blue-400', 'font-bold');
+                tabPanes.forEach((pane, i) => {
+                    if (i === idx) {
+                        pane.classList.remove('hidden');
+                        if (window.gsap) {
+                            gsap.fromTo(pane, {opacity: 0, y: 30}, {opacity: 1, y: 0, duration: 0.5, ease: 'power2.out'});
+                        }
+                    } else {
+                        pane.classList.add('hidden');
+                    }
+                });
+            });
+        });
+        // Announcement Modal Logic for Students
+        const openAnnouncementBtn = document.getElementById('open-student-announcement-modal');
+        const announcementModal = document.getElementById('student-announcement-modal');
+        const closeAnnouncementBtn = document.getElementById('close-student-announcement-modal');
+        const announcementContent = document.getElementById('student-announcement-content');
+        const announcementTime = document.getElementById('student-announcement-time');
+        openAnnouncementBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          // Fetch latest announcement from backend
+          fetch('/api/announcements/latest?audience=students')
+            .then(res => {
+              if (!res.ok) throw new Error('No announcement');
+              return res.json();
+            })
+            .then(ann => {
+              announcementContent.textContent = ann.message;
+              const date = new Date(ann.timestamp);
+              announcementTime.textContent = 'Sent: ' + date.toLocaleString();
+            })
+            .catch(() => {
+              announcementContent.textContent = 'No new announcements for students.';
+              announcementTime.textContent = '';
+            });
+          announcementModal.style.display = 'flex';
+        });
+        closeAnnouncementBtn.addEventListener('click', function() {
+          announcementModal.style.display = 'none';
+        });
+    });
+    </script>
+<button id="start-quiz-btn" class="btn-primary" style="margin:2rem auto;display:block;">Start Quiz</button>
+  <div id="quiz-app"></div>
+  <script src="student-quiz.js"></script>
+<button id="start-quiz-btn" class="btn-primary" style="margin:2rem auto;display:block;">Start Quiz</button>
+  <div id="quiz-app"></div>
+  <script src="student-quiz.js"></script>
+</body>
+</html>
